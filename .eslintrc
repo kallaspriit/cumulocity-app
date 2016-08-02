@@ -1,6 +1,7 @@
 {
     "extends": "sl",
     "rules": {
-        "eol-last": "off"
+        "eol-last": "off",
+        "no-console": "off"
     }
 }
