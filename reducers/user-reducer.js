@@ -8,9 +8,6 @@ const defaultState = {
 export default handleActions({
 	[FETCH_USER]: (state, action) => ({
 		...state,
-		info: {
-			id: 1,
-			name: `Jack Daniels #${action.payload}`,
-		},
+		info: action.payload,
 	}),
 }, defaultState);
