@@ -1,18 +1,20 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-function App({ children }) {
+import HeaderComponent from './components/HeaderComponent';
+
+function RootView({ children }) {
 	return (
 		<div>
-			<h1>App</h1>
+			<HeaderComponent />
 			<Link to="/">Index</Link> | <Link to="/counter">Counter</Link>
 			{children}
 		</div>
 	);
 }
 
-App.propTypes = {
+RootView.propTypes = {
 	children: PropTypes.object,
 };
 
-export default App;
+export default RootView;
