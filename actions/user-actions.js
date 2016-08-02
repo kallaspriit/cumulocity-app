@@ -1,26 +1,5 @@
-import { createAction } from 'redux-actions';
+import createApiAction from '../util/create-api-action';
 import { FETCH_USER } from '../constants';
+import userApi from '../apis/user-api';
 
-export const fetchUser = (id) => (dispatch) => {
-	console.log(`fetching user #${id}`);
-
-	setTimeout(() => {
-		const userInfo = {
-			id: 1,
-			name: `Jack Daniels #${id}`,
-		};
-
-		console.log('dispatching user', userInfo);
-
-		dispatch(
-			createAction(FETCH_USER)(userInfo)
-		);
-	}, 1000);
-
-	/*
-	return {
-		id: 1,
-		name: `Jack Daniels #${id}`,
-	};
-	*/
-};
+export const fetchUser = createApiAction(FETCH_USER, userApi.fetchUser);

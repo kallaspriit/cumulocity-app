@@ -6,7 +6,7 @@ import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { createDevTools } from 'redux-devtools';
 import thunkMiddleware from 'redux-thunk';
-// import promiseMiddleware from 'redux-promise';
+import promiseMiddleware from 'redux-promise';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
@@ -28,6 +28,7 @@ const store = createStore(
 	reducer,
 	compose(
 		applyMiddleware(thunkMiddleware),
+		applyMiddleware(promiseMiddleware),
 		DevTools.instrument()
 	)
 );

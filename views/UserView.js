@@ -4,6 +4,10 @@ import * as userActions from '../actions/user-actions';
 
 class UserView extends Component {
 
+	componentDidMount() {
+		this.props.fetchUser(0);
+	}
+
 	render() {
 		const {
 			user,
@@ -17,6 +21,7 @@ class UserView extends Component {
 				<div>
 					<button onClick={() => fetchUser(1)}>Load user #1</button>
 					<button onClick={() => fetchUser(2)}>Load user #2</button>
+					<button onClick={() => fetchUser('x')}>Load invalid user</button>
 				</div>
 			</div>
 		);
@@ -25,9 +30,18 @@ class UserView extends Component {
 	renderUserInfo(user) {
 		console.log('renderUserInfo', user);
 
-		if (!user.info) {
+
+		if (user.isLoading) {
 			return (
-				<em>user not loaded</em>
+				<em>loading user #{user.args[0]}</em>
+			);
+		} else if (user.error !== null) {
+			return (
+				<em>loading user failed ({user.error.message})</em>
+			);
+		} else if (!user.info) {
+			return (
+				<em>click on the buttons below to load a user</em>
 			);
 		}
 
