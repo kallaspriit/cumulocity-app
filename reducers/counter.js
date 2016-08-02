@@ -1,15 +1,15 @@
+import { handleActions } from 'redux-actions';
 import { INCREASE, DECREASE } from '../constants';
 
-const initialState = {
+const defaultState = {
 	number: 1,
 };
 
-export default function update(state = initialState, action) {
-	if (action.type === INCREASE) {
-		return { number: state.number + action.amount };
-	} else if (action.type === DECREASE) {
-		return { number: state.number - action.amount };
-	}
-
-	return state;
-}
+export default handleActions({
+	[INCREASE]: (state, action) => ({
+		number: state.number + action.payload,
+	}),
+	[DECREASE]: (state, action) => ({
+		number: state.number - action.payload,
+	}),
+}, defaultState);

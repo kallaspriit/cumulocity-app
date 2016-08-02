@@ -5,7 +5,7 @@ import { increase, decrease } from '../actions/counter';
 function Counter(props) {
 	return (
 		<div>
-			<p>Clicked: {props.number} times</p>
+			<p>Clicked: {props.number} times!</p>
 			<div>
 				<button onClick={() => props.increase(1)}>Increase</button>
 				<button onClick={() => props.decrease(1)}>Decrease</button>
