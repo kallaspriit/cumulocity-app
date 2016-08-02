@@ -1,20 +1,25 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { increase, decrease } from '../actions/counter';
+import * as counterActions from '../actions/counter-actions';
 
-function Counter(props) {
+function CounterView({
+	number,
+	increase,
+	decrease,
+}) {
 	return (
 		<div>
-			<p>Clicked: {props.number} times!</p>
+			<h2>Counter view</h2>
+			<p>Clicked: {number} times!</p>
 			<div>
-				<button onClick={() => props.increase(1)}>Increase</button>
-				<button onClick={() => props.decrease(1)}>Decrease</button>
+				<button onClick={() => increase(1)}>Increase</button>
+				<button onClick={() => decrease(1)}>Decrease</button>
 			</div>
 		</div>
 	);
 }
 
-Counter.propTypes = {
+CounterView.propTypes = {
 	number: PropTypes.number.isRequired,
 	increase: PropTypes.func.isRequired,
 	decrease: PropTypes.func.isRequired,
@@ -22,5 +27,7 @@ Counter.propTypes = {
 
 export default connect(
 	state => ({ number: state.counter.number }),
-	{ increase, decrease }
-)(Counter);
+	{
+		...counterActions,
+	}
+)(CounterView);
