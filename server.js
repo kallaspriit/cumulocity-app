@@ -1,24 +1,27 @@
 const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-const Express = require('express');
-const config = require('./webpack.config');
+const WebpackDevServer = require('webpack-dev-server');
+const webpackConfig = require('./webpack.config');
 
-const app = new Express();
+// configuration
 const port = 3000;
-const compiler = webpack(config);
+const compilerOptions = {
+	publicPath: webpackConfig.output.publicPath,
+	hot: true,
+	historyApiFallback: true,
+	noInfo: true,
+};
 
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-app.use(webpackHotMiddleware(compiler));
+// create compiler and server
+const compiler = webpack(webpackConfig);
+const webpackDevServer = new WebpackDevServer(compiler, compilerOptions);
 
-app.get('/*', (req, res) => {
-	res.sendFile(`${__dirname}/index.html`);
-});
-
-app.listen(port, (error) => {
+// start the server
+webpackDevServer.listen(port, 'localhost', (error) => {
 	if (error) {
 		console.error(error);
-	} else {
-		console.info('Listening on port %d, open up http://localhost:%s/ in your browser.', port, port);
+
+		return;
 	}
+
+	console.log(`Server is now listening on port ${port}`);
 });

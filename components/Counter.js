@@ -4,13 +4,13 @@ import { increase, decrease } from '../actions/counter';
 
 function Counter(props) {
 	return (
-		<p>
-			Clicked: {props.number} times!
-			{' '}
-			<button onClick={() => props.increase(1)}>+</button>
-			{' '}
-			<button onClick={() => props.decrease(1)}>-</button>
-		</p>
+		<div>
+			<p>Clicked: {props.number} times!</p>
+			<div>
+				<button onClick={() => props.increase(1)}>Increase</button>
+				<button onClick={() => props.decrease(1)}>Decrease</button>
+			</div>
+		</div>
 	);
 }
 

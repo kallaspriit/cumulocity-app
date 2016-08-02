@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
@@ -6,7 +5,7 @@ function App({ children }) {
 	return (
 		<div>
 			<h1>App</h1>
-			<Link to="/counter">Counter</Link>
+			<Link to="/">Index</Link> | <Link to="/counter">Counter</Link>
 			{children}
 		</div>
 	);

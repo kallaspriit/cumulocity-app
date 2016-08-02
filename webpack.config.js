@@ -4,7 +4,8 @@ const webpack = require('webpack');
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',
 	entry: [
-		'webpack-hot-middleware/client',
+		'webpack-dev-server/client?http://localhost:3000',
+		'webpack/hot/only-dev-server',
 		'./app',
 	],
 	output: {
@@ -13,13 +14,12 @@ module.exports = {
 		publicPath: '/static/',
 	},
 	plugins: [
-		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 	],
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			loaders: ['babel'],
+			loaders: ['react-hot', 'babel'],
 			exclude: /node_modules/,
 			include: __dirname,
 		}],
