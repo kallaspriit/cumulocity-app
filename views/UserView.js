@@ -28,9 +28,6 @@ class UserView extends Component {
 	}
 
 	renderUserInfo(user) {
-		console.log('renderUserInfo', user);
-
-
 		if (user.isLoading) {
 			return (
 				<em>loading user #{user.args[0]}</em>

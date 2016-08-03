@@ -1,12 +1,8 @@
 import { handleActions } from 'redux-actions';
+import { getDefaultAsyncState } from '../util/create-async-action';
 import { FETCH_USER } from '../constants';
 
-const defaultState = {
-	isLoading: false,
-	error: null,
-	info: null,
-	args: [],
-};
+const defaultState = getDefaultAsyncState();
 
 export default handleActions({
 	[FETCH_USER]: (state, action) => ({

@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 
-export default function createApiAction(name, callback) {
+export default function createAsyncAction(name, callback) {
 	return (...args) => (dispatch) => {
 		dispatch(
 			createAction(name)({
@@ -12,8 +12,6 @@ export default function createApiAction(name, callback) {
 
 		Promise.resolve(callback(...args)).then(
 			(info) => {
-				console.log('api request succeeded', info);
-
 				dispatch(
 					createAction(name)({
 						isLoading: false,
@@ -24,8 +22,6 @@ export default function createApiAction(name, callback) {
 				);
 			},
 			(error) => {
-				console.warn('api request failed', error);
-
 				dispatch(
 					createAction(name)({
 						isLoading: false,
@@ -36,5 +32,14 @@ export default function createApiAction(name, callback) {
 				);
 			}
 		);
+	};
+}
+
+export function getDefaultAsyncState(info = null) {
+	return {
+		isLoading: false,
+		error: null,
+		info,
+		args: [],
 	};
 }

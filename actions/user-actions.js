@@ -1,5 +1,5 @@
-import createApiAction from '../util/create-api-action';
-import { FETCH_USER } from '../constants';
+import createAsyncAction from '../util/create-async-action';
 import userApi from '../apis/user-api';
+import { FETCH_USER } from '../constants';
 
-export const fetchUser = createApiAction(FETCH_USER, userApi.fetchUser);
+export const fetchUser = createAsyncAction(FETCH_USER, userApi.fetchUser);
