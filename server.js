@@ -16,7 +16,7 @@ const compiler = webpack(webpackConfig);
 const webpackDevServer = new WebpackDevServer(compiler, compilerOptions);
 
 // start the server
-webpackDevServer.listen(port, 'localhost', (error) => {
+webpackDevServer.listen(port, '0.0.0.0', (error) => {
 	if (error) {
 		console.error(error);
 

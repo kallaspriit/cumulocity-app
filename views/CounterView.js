@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as counterActions from '../actions/counter-actions';
 
+import HeaderComponent from './components/HeaderComponent';
+
 function CounterView({
 	number,
 	increase,
@@ -9,7 +11,7 @@ function CounterView({
 }) {
 	return (
 		<div>
-			<h2>Counter view</h2>
+			<HeaderComponent title="Counter" />
 			<p>Clicked: {number} times!</p>
 			<div>
 				<button onClick={() => increase(1)}>Increase</button>

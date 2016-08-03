@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as userActions from '../actions/user-actions';
 
+import HeaderComponent from './components/HeaderComponent';
+
 class UserView extends Component {
 
 	render() {
@@ -12,7 +14,7 @@ class UserView extends Component {
 
 		return (
 			<div>
-				<h2>User view</h2>
+				<HeaderComponent title="User" />
 				{this.renderUserInfo(user)}
 				<div>
 					<button onClick={() => fetchUser(1)}>Load user #1</button>

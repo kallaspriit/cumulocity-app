@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import css from '../gfx/css/main.scss'; // eslint-disable-line no-unused-vars
 
-import HeaderComponent from './components/HeaderComponent';
+injectTapEventPlugin();
 
 function RootView({ children }) {
 	return (
-		<div>
-			<HeaderComponent />
+		<MuiThemeProvider>
 			{children}
-		</div>
+		</MuiThemeProvider>
 	);
 }
 
