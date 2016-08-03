@@ -4,10 +4,6 @@ import * as userActions from '../actions/user-actions';
 
 class UserView extends Component {
 
-	componentDidMount() {
-		this.props.fetchUser(0);
-	}
-
 	render() {
 		const {
 			user,
@@ -30,7 +26,7 @@ class UserView extends Component {
 	renderUserInfo(user) {
 		if (user.isLoading) {
 			return (
-				<em>loading user #{user.args[0]}</em>
+				<em>loading user</em>
 			);
 		} else if (user.error !== null) {
 			return (
