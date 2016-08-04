@@ -26,20 +26,21 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		const url = this._buildUrl('/inventory/managedObjects?fragmentType=c8y_IsDevice');
 
 		return this._get(url)
-			.then((response) => {
-				console.log('response', response);
-
-				return response.data.managedObjects.map(this._mapManagedObjectToDevice);
-			})
-			.catch((error) => {
-				console.error('error', error);
-			});
+			.then((response) => response.data.managedObjects.map(this._mapManagedObjectToDevice));
 	}
 
 	_mapManagedObjectToDevice(managedObject) {
-		return new DeviceModel({
+		const mappedDevice = new DeviceModel({
+			id: managedObject.id,
 			name: managedObject.name,
+			serial: managedObject.c8y_Hardware ? managedObject.c8y_Hardware.serialNumber : null,
+			model: managedObject.c8y_Hardware ? managedObject.c8y_Hardware.model : null,
+			isOnline: managedObject.c8y_Connection && managedObject.c8y_Connection.status === 'CONNECTED',
 		});
+
+		console.log('mapped', managedObject, mappedDevice);
+
+		return mappedDevice;
 	}
 
 	_buildUrl(query) {

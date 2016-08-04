@@ -9,7 +9,7 @@ import UserView from './views/UserView';
 export default [
 	<Route path="/" component={RootView}>
 		<Route path="devices" component={DevicesView} />
-		<Route path="device" component={DeviceView} />
+		<Route path="device/:deviceId" component={DeviceView} />
 		<Route path="user" component={UserView} />
 		<IndexRedirect to="devices" />
 	</Route>,

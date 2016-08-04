@@ -66,12 +66,14 @@ class UserView extends Component {
 
 UserView.propTypes = {
 	user: PropTypes.object,
+	
 	fetchUser: PropTypes.func.isRequired,
 };
 
 export default connect(
-	state => ({ user: state.user }),
-	{
+	state => ({
+		user: state.user,
+	}), {
 		...userActions,
 	}
 )(UserView);

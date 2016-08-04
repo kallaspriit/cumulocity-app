@@ -19,10 +19,6 @@ const cumulocityPlatform = new CumulocityPlatform(cumulocityConfig);
 
 platformApi.setProvider(cumulocityPlatform);
 
-platformApi.getDevices().then((devices) => {
-	console.log('devices', devices);
-});
-
 // root view
 function RootView({ children }) {
 	return (

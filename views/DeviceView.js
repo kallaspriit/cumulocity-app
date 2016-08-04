@@ -6,22 +6,20 @@ import CardHeader from 'material-ui/Card/CardHeader';
 import CardMedia from 'material-ui/Card/CardMedia';
 import CardTitle from 'material-ui/Card/CardTitle';
 import CardText from 'material-ui/Card/CardText';
-import CardActions from 'material-ui/Card/CardActions';
-import FlatButton from 'material-ui/FlatButton';
-
-import * as counterActions from '../actions/counter-actions';
 
 import HeaderComponent from './components/HeaderComponent';
 import GaugeComponent from './components/GaugeComponent';
 
 function DeviceView({
-	number,
-	increase,
-	decrease,
+	params,
 }) {
+	const {
+		deviceId,
+	} = params;
+
 	return (
 		<div className="device-view">
-			<HeaderComponent title="Light sensor" />
+			<HeaderComponent title="Raspberry Pi" />
 			<Card className="main-contents">
 				<CardHeader
 					title="Priit Kallas"
@@ -31,7 +29,7 @@ function DeviceView({
 				<CardMedia
 					overlay={
 						<CardTitle
-							title="Light sensor"
+							title={`Light sensor ${deviceId}`}
 							subtitle="Connected to Raspberry Pi"
 						/>
 					}
@@ -52,26 +50,18 @@ function DeviceView({
 							value={Math.round(Math.random() * 100)}
 						/>
 					</div>
-					<span>Clicked: {number} times</span>
 				</CardText>
-				<CardActions>
-					<FlatButton label="Increase" onTouchTap={() => increase(1)} />
-					<FlatButton label="Decrease" onTouchTap={() => decrease(1)} />
-				</CardActions>
 			</Card>
 		</div>
 	);
 }
 
 DeviceView.propTypes = {
-	number: PropTypes.number.isRequired,
-	increase: PropTypes.func.isRequired,
-	decrease: PropTypes.func.isRequired,
+	params: PropTypes.object.isRequired,
 };
 
 export default connect(
-	state => ({ number: state.counter.number }),
-	{
-		...counterActions,
+	state => ({
+	}), {
 	}
 )(DeviceView);

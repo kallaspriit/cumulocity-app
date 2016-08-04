@@ -1,20 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 
-export default class DrawerMenuComponent extends Component {
+import * as menuActions from '../../actions/menu-actions';
 
-	state = {
-		isOpen: false,
-	};
+class DrawerMenuComponent extends Component {
+
+	static propTypes = {
+		menu: PropTypes.object.isRequired,
+
+		openMainMenu: PropTypes.func.isRequired,
+		closeMainMenu: PropTypes.func.isRequired,
+	}
 
 	render() {
 		return (
 			<Drawer
 				onRequestChange={this.handleDrawerChange.bind(this)}
-				open={this.state.isOpen}
+				open={this.props.menu.isOpen}
 				docked={false}
 				disableSwipeToOpen={false}
 			>
@@ -28,19 +34,26 @@ export default class DrawerMenuComponent extends Component {
 	handleDrawerChange(isOpen, reason) {
 		console.log('handleDrawerChange', isOpen, reason);
 
-		this.setState({
-			isOpen,
-		});
+		if (isOpen) {
+			this.props.openMainMenu();
+		} else {
+			this.props.closeMainMenu();
+		}
 	}
 
 	handleOpen(view) {
 		return () => {
-			this.setState({
-				isOpen: false,
-			});
+			this.props.closeMainMenu();
 
 			browserHistory.push(`/${view}`);
 		};
 	}
-
 }
+
+export default connect(
+	state => ({
+		menu: state.menu,
+	}), {
+		...menuActions,
+	}
+)(DrawerMenuComponent);
