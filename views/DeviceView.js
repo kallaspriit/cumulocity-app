@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import * as counterActions from '../actions/counter-actions';
 
 import HeaderComponent from './components/HeaderComponent';
+import GaugeComponent from './components/GaugeComponent';
 
 function DeviceView({
 	number,
@@ -19,9 +20,9 @@ function DeviceView({
 	decrease,
 }) {
 	return (
-		<div>
+		<div className="device-view">
 			<HeaderComponent title="Light sensor" />
-			<Card>
+			<Card className="main-contents">
 				<CardHeader
 					title="Priit Kallas"
 					subtitle="Lai 29 4th floor"
@@ -41,7 +42,17 @@ function DeviceView({
 					/>
 				</CardMedia>
 				<CardText>
-					Clicked: {number} times
+					<div className="gauge-wrap">
+						<GaugeComponent
+							title="Light intensity"
+							unit="lux"
+							height={200}
+							min={0}
+							max={100}
+							value={Math.round(Math.random() * 100)}
+						/>
+					</div>
+					<span>Clicked: {number} times</span>
 				</CardText>
 				<CardActions>
 					<FlatButton label="Increase" onTouchTap={() => increase(1)} />

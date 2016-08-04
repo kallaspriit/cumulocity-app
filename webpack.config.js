@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	// devtool: 'cheap-module-eval-source-map',
@@ -14,9 +15,6 @@ module.exports = {
 		filename: 'bundle.js',
 		publicPath: '/static/',
 	},
-	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-	],
 	module: {
 		loaders: [{
 			test: /\.js$/,
@@ -25,12 +23,17 @@ module.exports = {
 			include: __dirname,
 		}, {
 			test: /\.scss$/,
-			loaders: ['style', 'css', 'sass'],
+			// loader: ExtractTextPlugin.extract('style', 'css?sourceMap', 'sass?sourceMap'),
+			loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
 			exclude: /node_modules/,
 			include: __dirname,
 		}],
 	},
 	sassLoader: {
-		includePaths: [path.resolve(__dirname, './gfx')],
+		// includePaths: [path.resolve(__dirname, './gfx')],
 	},
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+		new ExtractTextPlugin('styles.css'),
+	],
 };

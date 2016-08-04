@@ -34,6 +34,10 @@ export default class DrawerMenuComponent extends Component {
 
 	handleOpen(view) {
 		return () => {
+			this.setState({
+				isOpen: false,
+			});
+
 			browserHistory.push(`/${view}`);
 		};
 	}

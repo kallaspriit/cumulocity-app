@@ -1,8 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import * as userActions from '../actions/user-actions';
+
+import Card from 'material-ui/Card/Card';
+import CardHeader from 'material-ui/Card/CardHeader';
+import CardText from 'material-ui/Card/CardText';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import HeaderComponent from './components/HeaderComponent';
+
+import * as userActions from '../actions/user-actions';
 
 class UserView extends Component {
 
@@ -12,15 +18,23 @@ class UserView extends Component {
 			fetchUser,
 		} = this.props;
 
+		const btnStyle = {
+			margin: '0 5px',
+		};
+
 		return (
-			<div>
+			<div className="user-view">
 				<HeaderComponent title="User" />
-				{this.renderUserInfo(user)}
-				<div>
-					<button onClick={() => fetchUser(1)}>Load user #1</button>
-					<button onClick={() => fetchUser(2)}>Load user #2</button>
-					<button onClick={() => fetchUser('x')}>Load invalid user</button>
-				</div>
+				<Card className="main-contents">
+					<CardText>
+						{this.renderUserInfo(user)}
+						<div>
+							<RaisedButton onTouchTap={() => fetchUser(1)} style={btnStyle}>Load user #1</RaisedButton>
+							<RaisedButton onTouchTap={() => fetchUser(2)} style={btnStyle}>Load user #2</RaisedButton>
+							<RaisedButton onTouchTap={() => fetchUser('x')} style={btnStyle}>Load invalid</RaisedButton>
+						</div>
+					</CardText>
+				</Card>
 			</div>
 		);
 	}
@@ -41,9 +55,11 @@ class UserView extends Component {
 		}
 
 		return (
-			<div>
-				#{user.info.id} - {user.info.name}
-			</div>
+			<CardHeader
+				title={user.info.name}
+				subtitle="Telia"
+				avatar="/gfx/images/avatar.png"
+			/>
 		);
 	}
 }

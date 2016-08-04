@@ -20,6 +20,7 @@ export default class HeaderComponent extends Component {
 				title={this.props.title}
 				iconElementLeft={this.renderIconElementLeft()}
 				iconElementRight={this.renderIconElementRight()}
+				className="header-component"
 			/>
 		);
 	}

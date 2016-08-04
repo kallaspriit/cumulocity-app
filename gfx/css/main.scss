@@ -1,3 +1,15 @@
 BODY {
 	margin: 0;
 }
+
+.top-wrap {
+	height: 100%;
+	overflow: hidden;
+	overflow-y: auto;
+}
+.main-contents {
+	padding-top: 70px;
+}
+
+@import "views/device-view";
+@import "components/header-component";
