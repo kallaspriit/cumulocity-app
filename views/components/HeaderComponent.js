@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router';
 
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -8,19 +8,17 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowBackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 
-import MenuComponent from './MenuComponent';
-
 export default class HeaderComponent extends Component {
 
 	static propTypes = {
-		title: PropTypes.string.isRequired
+		title: PropTypes.string.isRequired,
 	}
 
 	render() {
 		return (
 			<AppBar
-			    title={this.props.title}
-			    iconElementLeft={this.renderIconElementLeft()}
+				title={this.props.title}
+				iconElementLeft={this.renderIconElementLeft()}
 				iconElementRight={this.renderIconElementRight()}
 			/>
 		);
@@ -37,7 +35,7 @@ export default class HeaderComponent extends Component {
 	renderIconElementRight() {
 		const menuOrigin = {
 			horizontal: 'right',
-			vertical: 'top'
+			vertical: 'top',
 		};
 
 		return (
@@ -48,8 +46,8 @@ export default class HeaderComponent extends Component {
 				targetOrigin={menuOrigin}
 				anchorOrigin={menuOrigin}
 			>
-				<MenuItem primaryText="Counter" onTouchTap={this.handleOpen('counter')} />
-				<MenuItem primaryText="User" onTouchTap={this.handleOpen('user')} />
+				<MenuItem onTouchTap={this.handleOpen('device')}>Device</MenuItem>
+				<MenuItem onTouchTap={this.handleOpen('user')}>User</MenuItem>
 			</IconMenu>
 		);
 	}
@@ -60,8 +58,8 @@ export default class HeaderComponent extends Component {
 
 	handleOpen(view) {
 		return () => {
-			browserHistory.push(`/${view}`)
-		}
+			browserHistory.push(`/${view}`);
+		};
 	}
 
 }

@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { getDefaultAsyncState } from '../util/create-async-action';
+import { getDefaultAsyncState } from '../libs/redux-promise-loading-middleware';
 import { FETCH_USER } from '../constants';
 
 const defaultState = getDefaultAsyncState();

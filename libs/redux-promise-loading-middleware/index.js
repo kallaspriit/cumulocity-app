@@ -43,3 +43,12 @@ export default function promiseMiddleware() {
 		}
 	};
 }
+
+export function getDefaultAsyncState(info = null) {
+	return {
+		isLoading: false,
+		error: null,
+		info,
+		args: [],
+	};
+}

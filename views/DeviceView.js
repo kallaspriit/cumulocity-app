@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import * as counterActions from '../actions/counter-actions';
 
 import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
@@ -10,16 +9,18 @@ import CardText from 'material-ui/Card/CardText';
 import CardActions from 'material-ui/Card/CardActions';
 import FlatButton from 'material-ui/FlatButton';
 
+import * as counterActions from '../actions/counter-actions';
+
 import HeaderComponent from './components/HeaderComponent';
 
-function CounterView({
+function DeviceView({
 	number,
 	increase,
 	decrease,
 }) {
 	return (
 		<div>
-  			<HeaderComponent title="Light sensor" />
+			<HeaderComponent title="Light sensor" />
 			<Card>
 				<CardHeader
 					title="Priit Kallas"
@@ -36,6 +37,7 @@ function CounterView({
 				>
 					<img
 						src="/gfx/images/sensor-light.png"
+						alt="Light sensor"
 					/>
 				</CardMedia>
 				<CardText>
@@ -46,11 +48,11 @@ function CounterView({
 					<FlatButton label="Decrease" onTouchTap={() => decrease(1)} />
 				</CardActions>
 			</Card>
-  		</div>
+		</div>
 	);
 }
 
-CounterView.propTypes = {
+DeviceView.propTypes = {
 	number: PropTypes.number.isRequired,
 	increase: PropTypes.func.isRequired,
 	decrease: PropTypes.func.isRequired,
@@ -61,4 +63,4 @@ export default connect(
 	{
 		...counterActions,
 	}
-)(CounterView);
+)(DeviceView);

@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import css from '../gfx/css/main.scss'; // eslint-disable-line no-unused-vars
-
-import DrawerMenuComponent from './components/DrawerMenuComponent';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
+import css from '../gfx/css/main.scss'; // eslint-disable-line no-unused-vars
+import DrawerMenuComponent from './components/DrawerMenuComponent';
 
 injectTapEventPlugin();
 

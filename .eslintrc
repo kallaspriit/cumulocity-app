@@ -3,5 +3,8 @@
     "rules": {
         "eol-last": "off",
         "no-console": "off"
+    },
+    "globals": {
+        "document": true
     }
 }

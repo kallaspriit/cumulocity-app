@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router'
+import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -7,7 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 export default class DrawerMenuComponent extends Component {
 
 	state = {
-		isOpen: false
+		isOpen: false,
 	};
 
 	render() {
@@ -18,7 +18,7 @@ export default class DrawerMenuComponent extends Component {
 				docked={false}
 				disableSwipeToOpen={false}
 			>
-				<MenuItem onTouchTap={this.handleOpen('counter')}>Counter</MenuItem>
+				<MenuItem onTouchTap={this.handleOpen('device')}>Device</MenuItem>
 				<MenuItem onTouchTap={this.handleOpen('user')}>User</MenuItem>
 			</Drawer>
 		);
@@ -28,14 +28,14 @@ export default class DrawerMenuComponent extends Component {
 		console.log('handleDrawerChange', isOpen, reason);
 
 		this.setState({
-			isOpen
+			isOpen,
 		});
 	}
 
 	handleOpen(view) {
 		return () => {
-			browserHistory.push(`/${view}`)
-		}
+			browserHistory.push(`/${view}`);
+		};
 	}
 
 }

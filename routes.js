@@ -2,13 +2,13 @@ import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
 import RootView from './views/RootView';
-import CounterView from './views/CounterView';
+import DeviceView from './views/DeviceView';
 import UserView from './views/UserView';
 
 export default [
 	<Route path="/" component={RootView}>
-		<Route path="counter" component={CounterView} />
+		<Route path="device" component={DeviceView} />
 		<Route path="user" component={UserView} />
-		<IndexRedirect to="counter" />
+		<IndexRedirect to="device" />
 	</Route>,
 ];
