@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import update from 'react-addons-update';
 import Chart from 'react-highcharts';
 import highchartsMore from 'highcharts-more';
 import solidGauge from 'highcharts/modules/solid-gauge';
