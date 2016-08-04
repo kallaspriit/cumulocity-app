@@ -5,15 +5,14 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import css from '../gfx/css/main.scss'; // eslint-disable-line no-unused-vars
 import DrawerMenuComponent from './components/DrawerMenuComponent';
 import CumulocityPlatform from '../libs/cumulocity/CumulocityPlatform';
-import cumulocityConfig from '../config/cumulocity';
+import themeConfig from '../config/theme-config';
+import cumulocityConfig from '../config/cumulocity-config';
 import platformApi from '../apis/platform-api';
 
 injectTapEventPlugin();
 
 // setup theme
-const muiTheme = getMuiTheme({
-	// override theme styles
-});
+const muiTheme = getMuiTheme(themeConfig);
 
 // setup platform
 const cumulocityPlatform = new CumulocityPlatform(cumulocityConfig);
