@@ -38,7 +38,7 @@
       "density": 4.0
     }
   ],
-  "start_url": "/device",
+  "start_url": "/devices",
   "display": "standalone",
   "orientation": "portrait"
 }

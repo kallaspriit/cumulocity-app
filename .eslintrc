@@ -4,6 +4,8 @@
         "eol-last": "off",
         "no-console": "off",
         "no-underscore-dangle": "off",
+        "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
+        "react/prefer-stateless-function": "off"
     },
     "globals": {
         "document": true
