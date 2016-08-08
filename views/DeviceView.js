@@ -74,14 +74,32 @@ class DeviceView extends Component {
 						alt="Light sensor"
 					/>
 				</CardMedia>
-				{this.renderDeviceFragments()}
+				{this.renderDeviceCapabilityList(info.capabilities)}
 				{this.renderChildDeviceList(info.childDevices)}
 			</Card>
 		);
 	}
 
-	renderDeviceFragments() {
-		return null;
+	renderDeviceCapabilityList(capabilities) {
+		if (capabilities.length === 0) {
+			return null;
+		}
+
+		return (
+			<List>
+				<Subheader>Capabilities</Subheader>
+				{capabilities.map(this.renderCapabilityListItem)}
+			</List>
+		);
+	}
+
+	renderCapabilityListItem(capability, index) {
+		return (
+			<ListItem
+				key={index}
+				primaryText={capability.type}
+			/>
+		);
 	}
 
 	renderChildDeviceList(childDevices) {

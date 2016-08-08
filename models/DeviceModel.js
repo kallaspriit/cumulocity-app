@@ -1,4 +1,5 @@
 import AbstractModel from '../src/AbstractModel';
+import CapabilityModel from './CapabilityModel';
 
 export default class DeviceModel extends AbstractModel {
 
@@ -10,6 +11,8 @@ export default class DeviceModel extends AbstractModel {
 			model: [String, null],
 			isOnline: Boolean,
 			childDevices: Array.of(DeviceModel),
+			supportedOperations: Array.of(String),
+			capabilities: Array.of(CapabilityModel),
 		};
 	}
 

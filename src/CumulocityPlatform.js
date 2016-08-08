@@ -1,6 +1,7 @@
 
 import AbstractPlatform from './AbstractPlatform';
 import DeviceModel from '../models/DeviceModel';
+import CapabilityModel from '../models/CapabilityModel';
 
 export default class CumulocityPlatform extends AbstractPlatform {
 
@@ -59,11 +60,36 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				? info.c8y_Connection.status === 'CONNECTED'
 				: false,
 			childDevices: info.childDevices ? info.childDevices.references.map(this._mapChildDevice.bind(this)) : [],
+			supportedOperations: info.c8y_SupportedOperations ? info.c8y_SupportedOperations : [],
+			capabilities: this._extractCapabilities(info),
 		});
 
 		// console.log('mapped', info, mappedDevice);
 
 		return mappedDevice;
+	}
+
+	_extractCapabilities(info) {
+		return Object.keys(info).reduce((capabilities, key) => {
+			switch (key) {
+				case 'c8y_Relay':
+					capabilities.push(new CapabilityModel({
+						type: CapabilityModel.Type.RELAY,
+					}));
+					break;
+
+				case 'c8y_LightSensor':
+					capabilities.push(new CapabilityModel({
+						type: CapabilityModel.Type.LIGHT_SENSOR,
+					}));
+					break;
+
+				default:
+					// ignore
+			}
+
+			return capabilities;
+		}, []);
 	}
 
 	_mapChildDevice(info) {
