@@ -26,7 +26,6 @@ class DrawerMenuComponent extends Component {
 			>
 				<MenuItem onTouchTap={this.handleOpen('devices')}>Devices</MenuItem>
 				<MenuItem onTouchTap={this.handleOpen('device')}>Device</MenuItem>
-				<MenuItem onTouchTap={this.handleOpen('user')}>User</MenuItem>
 			</Drawer>
 		);
 	}

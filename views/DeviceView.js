@@ -8,8 +8,7 @@ import CardTitle from 'material-ui/Card/CardTitle';
 import CardText from 'material-ui/Card/CardText';
 
 import HeaderComponent from './components/HeaderComponent';
-import LoaderComponent from './components/LoaderComponent';
-import ErrorComponent from './components/ErrorComponent';
+import AsyncComponent from './components/AsyncComponent';
 import GaugeComponent from './components/GaugeComponent';
 
 import * as platformActions from '../actions/platform-actions';
@@ -28,33 +27,19 @@ class DeviceView extends Component {
 	}
 
 	render() {
-		return (
-			<div className="device-view">
-				<HeaderComponent title="XXX" />
-				{this.renderMainContents()}
-			</div>
-		);
-	}
-
-	renderMainContents() {
 		const {
 			device,
 		} = this.props;
 
-		if (device.error) {
-			return <ErrorComponent error={device.error} />;
-		} else if (device.isLoading || !device.info) {
-			return <LoaderComponent />;
-		}
-
-		return this.renderDevice(device.info);
+		return (
+			<div className="device-view">
+				<HeaderComponent title="XXX" />
+				<AsyncComponent info={device} render={this.renderDevice.bind(this)} />
+			</div>
+		);
 	}
 
 	renderDevice(info) {
-		const {
-			deviceId,
-		} = this.props.params;
-
 		return (
 			<Card className="main-contents">
 				<CardHeader
@@ -65,8 +50,8 @@ class DeviceView extends Component {
 				<CardMedia
 					overlay={
 						<CardTitle
-							title={`Light sensor ${deviceId}`}
-							subtitle="Connected to Raspberry Pi"
+							title="Light sensor"
+							subtitle={`Connected to ${info.name}`}
 						/>
 					}
 				>

@@ -7,7 +7,7 @@ import ListItem from 'material-ui/List/ListItem';
 import CompareArrows from 'material-ui/svg-icons/action/compare-arrows';
 
 import HeaderComponent from './components/HeaderComponent';
-import LoaderComponent from './components/LoaderComponent';
+import AsyncComponent from './components/AsyncComponent';
 
 import * as platformActions from '../actions/platform-actions';
 
@@ -24,24 +24,16 @@ class DevicesView extends Component {
 	}
 
 	render() {
-		return (
-			<div className="devices-view">
-				<HeaderComponent title="Devices" />
-				{this.renderMainContents()}
-			</div>
-		);
-	}
-
-	renderMainContents() {
 		const {
 			devices,
 		} = this.props;
 
-		if (devices.isLoading || !devices.info) {
-			return <LoaderComponent />;
-		}
-
-		return this.renderDevices(devices.info);
+		return (
+			<div className="devices-view">
+				<HeaderComponent title="Devices" />
+				<AsyncComponent info={devices} render={this.renderDevices.bind(this)} />
+			</div>
+		);
 	}
 
 	renderDevices(devices) {

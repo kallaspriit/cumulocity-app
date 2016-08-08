@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function promiseMiddleware() {
 	return (next) => (action) => {
 		const {
@@ -51,4 +53,17 @@ export function getDefaultAsyncState(info = null) {
 		info,
 		args: [],
 	};
+}
+
+export function renderAsync(
+	info,
+	renderInfo,
+	renderLoading = null,
+	renderError = null
+) {
+	if (device.error) {
+		return <ErrorComponent error={device.error} />;
+	} else if (device.isLoading || !device.info) {
+		return <LoaderComponent />;
+	}
 }
