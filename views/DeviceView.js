@@ -31,9 +31,11 @@ class DeviceView extends Component {
 			device,
 		} = this.props;
 
+		const title = !device.info ? 'Loading device info...' : device.info.name;
+
 		return (
 			<div className="device-view">
-				<HeaderComponent title="XXX" />
+				<HeaderComponent title={title} />
 				<AsyncComponent info={device} render={this.renderDevice.bind(this)} />
 			</div>
 		);

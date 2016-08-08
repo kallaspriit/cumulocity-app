@@ -1,17 +1,15 @@
-export default class DeviceModel {
+import AbstractModel from '../src/AbstractModel';
 
-	constructor({
-		id,
-		name,
-		serial,
-		model,
-		isOnline,
-	}) {
-		this.id = id;
-		this.name = name;
-		this.serial = serial;
-		this.model = model;
-		this.isOnline = isOnline;
+export default class DeviceModel extends AbstractModel {
+
+	getSchema() {
+		return {
+			id: String,
+			name: String,
+			serial: [String, null],
+			model: String,
+			isOnline: Boolean,
+		};
 	}
 
 }

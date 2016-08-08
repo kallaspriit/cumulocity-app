@@ -37,8 +37,6 @@ class ErrorComponent extends Component {
 
 		if (error) {
 			StackTrace.fromError(error).then((trace) => {
-				console.log('stacktrace', trace);
-
 				this.setState({
 					trace,
 					isTraceLoading: false,

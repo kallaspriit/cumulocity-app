@@ -47,16 +47,20 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._mapManagedObjectToDevice(response.data);
 	}
 
-	_mapManagedObjectToDevice(managedObject) {
+	_mapManagedObjectToDevice(info) {
 		const mappedDevice = new DeviceModel({
-			id: managedObject.id,
-			name: managedObject.name,
-			serial: managedObject.c8y_Hardware ? managedObject.c8y_Hardware.serialNumber : null,
-			model: managedObject.c8y_Hardware ? managedObject.c8y_Hardware.model : null,
-			isOnline: managedObject.c8y_Connection && managedObject.c8y_Connection.status === 'CONNECTED',
+			id: info.id,
+			name: info.name,
+			serial: info.c8y_Hardware && info.c8y_Hardware.serialNumber ? info.c8y_Hardware.serialNumber : null,
+			model: info.c8y_Hardware
+				? info.c8y_Hardware.model
+				: null,
+			isOnline: info.c8y_Connection && info.c8y_Connection.status
+				? info.c8y_Connection.status === 'CONNECTED'
+				: false,
 		});
 
-		console.log('mapped', managedObject, mappedDevice);
+		console.log('mapped', info, mappedDevice);
 
 		return mappedDevice;
 	}
