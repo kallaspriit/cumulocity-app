@@ -9,7 +9,6 @@ import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
 import CardMedia from 'material-ui/Card/CardMedia';
 import CardTitle from 'material-ui/Card/CardTitle';
-import CardText from 'material-ui/Card/CardText';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
