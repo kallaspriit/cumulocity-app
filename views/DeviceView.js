@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import Card from 'material-ui/Card/Card';
@@ -8,18 +8,54 @@ import CardTitle from 'material-ui/Card/CardTitle';
 import CardText from 'material-ui/Card/CardText';
 
 import HeaderComponent from './components/HeaderComponent';
+import LoaderComponent from './components/LoaderComponent';
+import ErrorComponent from './components/ErrorComponent';
 import GaugeComponent from './components/GaugeComponent';
 
-function DeviceView({
-	params,
-}) {
-	const {
-		deviceId,
-	} = params;
+import * as platformActions from '../actions/platform-actions';
 
-	return (
-		<div className="device-view">
-			<HeaderComponent title="Raspberry Pi" />
+class DeviceView extends Component {
+
+	static propTypes = {
+		params: PropTypes.object.isRequired,
+		device: PropTypes.object.isRequired,
+
+		getDevice: PropTypes.func.isRequired,
+	};
+
+	componentDidMount() {
+		this.props.getDevice(this.props.params.deviceId);
+	}
+
+	render() {
+		return (
+			<div className="device-view">
+				<HeaderComponent title="XXX" />
+				{this.renderMainContents()}
+			</div>
+		);
+	}
+
+	renderMainContents() {
+		const {
+			device,
+		} = this.props;
+
+		if (device.error) {
+			return <ErrorComponent error={device.error} />;
+		} else if (device.isLoading || !device.info) {
+			return <LoaderComponent />;
+		}
+
+		return this.renderDevice(device.info);
+	}
+
+	renderDevice(info) {
+		const {
+			deviceId,
+		} = this.props.params;
+
+		return (
 			<Card className="main-contents">
 				<CardHeader
 					title="Priit Kallas"
@@ -52,16 +88,14 @@ function DeviceView({
 					</div>
 				</CardText>
 			</Card>
-		</div>
-	);
+		);
+	}
 }
-
-DeviceView.propTypes = {
-	params: PropTypes.object.isRequired,
-};
 
 export default connect(
 	state => ({
+		device: state.device,
 	}), {
+		...platformActions,
 	}
 )(DeviceView);

@@ -39,11 +39,6 @@ class HeaderComponent extends Component {
 	renderIconElementLeft() {
 		const canGoBack = window.history.length > 1; // eslint-disable-line
 
-		console.log('canGoBack', canGoBack, window.history.length, this.context.router, this.context.history);
-
-		window.r = this.context.router;
-		window.h = this.context.history;
-
 		if (!canGoBack) {
 			return (
 				<IconButton onTouchTap={() => this.handleOpenMenu()}>

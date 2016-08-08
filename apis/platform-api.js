@@ -1,4 +1,4 @@
-import AbstractPlatform from '../libs/platform/AbstractPlatform';
+import AbstractPlatform from '../src/AbstractPlatform';
 
 export class PlatformApi extends AbstractPlatform {
 
@@ -55,6 +55,12 @@ export class PlatformApi extends AbstractPlatform {
 		expectedMethodNames.forEach((expectedMethodName) => {
 			if (proxiedMethodNames.indexOf(expectedMethodName) === -1) {
 				throw new Error(`Expected platform provider to implement "${expectedMethodName}"`);
+			}
+		});
+
+		proxiedMethodNames.forEach((proxiedMethodName) => {
+			if (expectedMethodNames.indexOf(proxiedMethodName) === -1) {
+				throw new Error(`Expected abstract platform to include "${proxiedMethodName}"`);
 			}
 		});
 	}

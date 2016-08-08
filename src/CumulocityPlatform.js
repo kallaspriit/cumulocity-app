@@ -1,8 +1,13 @@
-import request from 'axios';
-import AbstractPlatform from '../platform/AbstractPlatform';
-import DeviceModel from '../platform/models/DeviceModel';
+
+import AbstractPlatform from './AbstractPlatform';
+import DeviceModel from '../models/DeviceModel';
 
 export default class CumulocityPlatform extends AbstractPlatform {
+
+	static urls = {
+		getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
+		getDevice: (id) => `/inventory/managedObjects/${id}`,
+	};
 
 	constructor({
 		host,
@@ -23,10 +28,23 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	getDevices() {
-		const url = this._buildUrl('/inventory/managedObjects?fragmentType=c8y_IsDevice');
+		const url = this._buildUrl(CumulocityPlatform.urls.getDevices());
 
-		return this._get(url)
-			.then((response) => response.data.managedObjects.map(this._mapManagedObjectToDevice));
+		return this._get(url).then(this._extractDevices.bind(this));
+	}
+
+	getDevice(id) {
+		const url = this._buildUrl(CumulocityPlatform.urls.getDevice(id));
+
+		return this._get(url).then(this._extractDevice.bind(this));
+	}
+
+	_extractDevices(response) {
+		return response.data.managedObjects.map(this._mapManagedObjectToDevice);
+	}
+
+	_extractDevice(response) {
+		return this._mapManagedObjectToDevice(response.data);
 	}
 
 	_mapManagedObjectToDevice(managedObject) {
@@ -45,14 +63,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 	_buildUrl(query) {
 		return `${this.config.protocol}://${this.config.tenant}.${this.config.host}/${query}`;
-	}
-
-	_get(url) {
-		return request({
-			url,
-			method: 'get',
-			...this._getStandardRequestParameters(),
-		});
 	}
 
 	_getStandardRequestParameters() {

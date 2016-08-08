@@ -13,6 +13,12 @@ import * as platformActions from '../actions/platform-actions';
 
 class DevicesView extends Component {
 
+	static propTypes = {
+		devices: PropTypes.object.isRequired,
+
+		getDevices: PropTypes.func.isRequired,
+	};
+
 	componentDidMount() {
 		this.props.getDevices();
 	}
@@ -32,9 +38,7 @@ class DevicesView extends Component {
 		} = this.props;
 
 		if (devices.isLoading || !devices.info) {
-			return (
-				<LoaderComponent />
-			);
+			return <LoaderComponent />;
 		}
 
 		return this.renderDevices(devices.info);
@@ -53,19 +57,13 @@ class DevicesView extends Component {
 			<ListItem
 				key={device.id}
 				primaryText={device.name}
-				secondaryText={device.serial && device.model ? `${device.model} (${device.serial})` : 'n/a'}
+				secondaryText={device.serial && device.model ? `${device.model} - ${device.serial}` : 'n/a'}
 				leftIcon={<CompareArrows color={device.isOnline ? '#090' : '#900'} />}
 				onTouchTap={() => browserHistory.push(`/device/${device.id}`)}
 			/>
 		);
 	}
 }
-
-DevicesView.propTypes = {
-	devices: PropTypes.object.isRequired,
-
-	getDevices: PropTypes.func.isRequired,
-};
 
 export default connect(
 	state => ({

@@ -12,6 +12,12 @@ import * as userActions from '../actions/user-actions';
 
 class UserView extends Component {
 
+	static propTypes = {
+		user: PropTypes.object,
+
+		fetchUser: PropTypes.func.isRequired,
+	};
+
 	render() {
 		const {
 			user,
@@ -63,12 +69,6 @@ class UserView extends Component {
 		);
 	}
 }
-
-UserView.propTypes = {
-	user: PropTypes.object,
-	
-	fetchUser: PropTypes.func.isRequired,
-};
 
 export default connect(
 	state => ({
