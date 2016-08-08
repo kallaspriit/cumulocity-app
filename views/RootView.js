@@ -36,3 +36,9 @@ RootView.propTypes = {
 };
 
 export default RootView;
+
+// for debugging only
+window.app = {
+	...window.app || {},
+	cumulocity: cumulocityPlatform,
+};

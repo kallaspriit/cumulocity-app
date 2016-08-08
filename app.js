@@ -56,5 +56,10 @@ ReactDOM.render(
 	document.getElementById('root')
 );
 
-// for debugging
-window.store = store; // eslint-disable-line
+// for debugging only
+window.app = {
+	...window.app || {},
+	store,
+	reducer,
+	history,
+};

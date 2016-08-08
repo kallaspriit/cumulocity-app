@@ -12,6 +12,14 @@ export default class AbstractPlatform {
 		});
 	}
 
+	_post(url, data) {
+		return this._request({
+			url,
+			data,
+			method: 'post',
+		});
+	}
+
 	_request({
 		url,
 		method = 'get',
