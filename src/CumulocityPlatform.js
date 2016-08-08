@@ -52,6 +52,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		const mappedDevice = new DeviceModel({
 			id: info.id,
 			name: info.name,
+			type: info.type ? info.type : null,
 			serial: info.c8y_Hardware && info.c8y_Hardware.serialNumber ? info.c8y_Hardware.serialNumber : null,
 			model: info.c8y_Hardware
 				? info.c8y_Hardware.model

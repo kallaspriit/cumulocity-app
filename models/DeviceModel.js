@@ -7,6 +7,7 @@ export default class DeviceModel extends AbstractModel {
 		return {
 			id: String,
 			name: String,
+			type: [String, null],
 			serial: [String, null],
 			model: [String, null],
 			isOnline: Boolean,
