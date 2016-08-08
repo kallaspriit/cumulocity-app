@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Subheader from 'material-ui/Subheader';
 import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
 import CardMedia from 'material-ui/Card/CardMedia';
@@ -22,8 +26,14 @@ class DeviceView extends Component {
 		getDevice: PropTypes.func.isRequired,
 	};
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.getDevice(this.props.params.deviceId);
+	}
+
+	componentWillReceiveProps(newProps) {
+		if (newProps.params.deviceId !== this.props.params.deviceId) {
+			this.props.getDevice(newProps.params.deviceId);
+		}
 	}
 
 	render() {
@@ -31,7 +41,9 @@ class DeviceView extends Component {
 			device,
 		} = this.props;
 
-		const title = !device.info ? 'Loading device info...' : device.info.name;
+		const title = !device.info || device.isLoading
+			? 'Devices » loading...'
+			: `Devices » ${device.info.name}`;
 
 		return (
 			<div className="device-view">
@@ -42,6 +54,60 @@ class DeviceView extends Component {
 	}
 
 	renderDevice(info) {
+		return (
+			<Card className="main-contents">
+				<CardHeader
+					title="Priit Kallas"
+					subtitle="Lai 29 4th floor"
+					avatar="/gfx/images/avatar.png"
+				/>
+				<CardMedia
+					overlay={
+						<CardTitle
+							title={info.name}
+							subtitle={`${info.model} - ${info.serial}`}
+						/>
+					}
+				>
+					<img
+						src="/gfx/images/sensor-light.png"
+						alt="Light sensor"
+					/>
+				</CardMedia>
+				{this.renderDeviceFragments()}
+				{this.renderChildDeviceList(info.childDevices)}
+			</Card>
+		);
+	}
+
+	renderDeviceFragments() {
+		return null;
+	}
+
+	renderChildDeviceList(childDevices) {
+		if (childDevices.length === 0) {
+			return null;
+		}
+
+		return (
+			<List>
+				<Subheader>Child devices</Subheader>
+				{childDevices.map(this.renderChildDeviceListItem)}
+			</List>
+		);
+	}
+
+	renderChildDeviceListItem(device) {
+		return (
+			<ListItem
+				key={device.id}
+				primaryText={device.name}
+				onTouchTap={() => browserHistory.push(`/device/${device.id}`)}
+			/>
+		);
+	}
+
+	renderX(info) {
 		return (
 			<Card className="main-contents">
 				<CardHeader

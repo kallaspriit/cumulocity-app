@@ -19,7 +19,7 @@ class DevicesView extends Component {
 		getDevices: PropTypes.func.isRequired,
 	};
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.getDevices();
 	}
 

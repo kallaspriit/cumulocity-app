@@ -7,8 +7,9 @@ export default class DeviceModel extends AbstractModel {
 			id: String,
 			name: String,
 			serial: [String, null],
-			model: String,
+			model: [String, null],
 			isOnline: Boolean,
+			childDevices: Array.of(DeviceModel),
 		};
 	}
 

@@ -40,7 +40,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_extractDevices(response) {
-		return response.data.managedObjects.map(this._mapManagedObjectToDevice);
+		return response.data.managedObjects.map(this._mapManagedObjectToDevice.bind(this));
 	}
 
 	_extractDevice(response) {
@@ -58,11 +58,16 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			isOnline: info.c8y_Connection && info.c8y_Connection.status
 				? info.c8y_Connection.status === 'CONNECTED'
 				: false,
+			childDevices: info.childDevices ? info.childDevices.references.map(this._mapChildDevice.bind(this)) : [],
 		});
 
-		console.log('mapped', info, mappedDevice);
+		// console.log('mapped', info, mappedDevice);
 
 		return mappedDevice;
+	}
+
+	_mapChildDevice(info) {
+		return this._mapManagedObjectToDevice(info.managedObject);
 	}
 
 	_buildUrl(query) {

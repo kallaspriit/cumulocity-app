@@ -55,3 +55,6 @@ ReactDOM.render(
 	</Provider>,
 	document.getElementById('root')
 );
+
+// for debugging
+window.store = store; // eslint-disable-line
