@@ -8,6 +8,11 @@ export default {
 	entry: [
 		'./app',
 	],
+	output: {
+		...developmentConfig.output,
+		publicPath: '/',
+		filename: 'static/bundle.js',
+	},
 	module: {
 		...developmentConfig.module,
 		loaders: [{

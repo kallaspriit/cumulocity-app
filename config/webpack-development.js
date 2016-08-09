@@ -15,7 +15,7 @@ export default {
 	output: {
 		path: distributionPath,
 		filename: 'bundle.js',
-		publicPath: '/',
+		publicPath: '/static/',
 	},
 	module: {
 		loaders: [{

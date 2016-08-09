@@ -39,12 +39,12 @@ class DeviceView extends Component {
 		this.props.getDevice(this.props.params.deviceId);
 	}
 
-	componentWillReceiveProps(newProps) {
-		if (newProps.params.deviceId !== this.props.params.deviceId) {
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.params.deviceId !== this.props.params.deviceId) {
 			this.stopRealtimeUpdates(this.props.params.deviceId);
-			this.setupRealtimeUpdates(newProps.params.deviceId);
+			this.setupRealtimeUpdates(nextProps.params.deviceId);
 
-			this.props.getDevice(newProps.params.deviceId);
+			this.props.getDevice(nextProps.params.deviceId);
 		}
 	}
 

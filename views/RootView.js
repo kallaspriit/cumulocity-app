@@ -54,8 +54,21 @@ export default class RootView extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log('RootView componentWillReceiveProps', nextProps.location);
+		this.handleHistoryChange(nextProps);
+	}
 
+	render() {
+		return (
+			<MuiThemeProvider muiTheme={muiTheme}>
+				<div className="top-wrap">
+					{this.props.children}
+					<DrawerMenuComponent />
+				</div>
+			</MuiThemeProvider>
+		);
+	}
+
+	handleHistoryChange(nextProps) {
 		if (nextProps.location !== this.props.location) {
 			const newHistory = [
 				...this.state.history,
@@ -79,17 +92,6 @@ export default class RootView extends Component {
 				history: newHistory,
 			});
 		}
-	}
-
-	render() {
-		return (
-			<MuiThemeProvider muiTheme={muiTheme}>
-				<div className="top-wrap">
-					{this.props.children}
-					<DrawerMenuComponent />
-				</div>
-			</MuiThemeProvider>
-		);
 	}
 }
 

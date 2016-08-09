@@ -31,19 +31,11 @@ export default class AbstractPlatform {
 		method = 'get',
 		...rest,
 	}) {
-		const startTime = Date.now();
-
 		return request({
 			...this._getStandardRequestParameters(),
 			url,
 			method,
 			...rest,
-		}).then((response) => {
-			const timeTaken = Date.now() - startTime;
-
-			console.log(`got response for ${url} in ${timeTaken}ms`, response.data);
-
-			return response;
 		});
 	}
 

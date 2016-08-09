@@ -22,14 +22,22 @@ function removeExistingDirectory(callback) {
 function createPaths(callback) {
 	console.log('creating paths');
 
-	mkdirp('dist/gfx', (error) => {
+	mkdirp('dist/static', (error) => {
 		if (error) {
 			console.error(`creating paths failed: ${error}`);
 
 			return;
 		}
 
-		callback();
+		mkdirp('dist/gfx', (error2) => {
+			if (error2) {
+				console.error(`creating paths failed: ${error2}`);
+
+				return;
+			}
+
+			callback();
+		});
 	});
 }
 

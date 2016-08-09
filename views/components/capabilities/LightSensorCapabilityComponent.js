@@ -23,10 +23,10 @@ class LightSensorCapabilityComponent extends Component {
 		};
 	}
 
-	componentWillReceiveProps(newProps) {
+	componentWillReceiveProps(nextProps) {
 		const {
 			realtimeUpdates,
-		} = this.props;
+		} = nextProps;
 
 		const measurement = this.getRealtimeMeasurement(realtimeUpdates);
 

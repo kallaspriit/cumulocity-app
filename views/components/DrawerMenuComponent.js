@@ -31,8 +31,6 @@ class DrawerMenuComponent extends Component {
 	}
 
 	handleDrawerChange(isOpen, reason) {
-		console.log('handleDrawerChange', isOpen, reason);
-
 		if (isOpen) {
 			this.props.openMainMenu();
 		} else {
