@@ -130,10 +130,10 @@ class DeviceView extends Component {
 
 	renderCapabilityWidget(info, capability) {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
-		const realtimeInfo = this.props.realtime[channel] || [];
+		const realtimeUpdates = this.props.realtime[channel] || [];
 		const capabilityProps = {
-			device: info,
-			realtimeInfo,
+			info,
+			realtimeUpdates,
 		};
 
 		switch (capability.type) {
@@ -177,6 +177,7 @@ class DeviceView extends Component {
 		const typeToBackgroundMap = {
 			c8y_Linux: '/gfx/images/Devices/computer.jpg',
 			Light: '/gfx/images/devices/light.jpg',
+			Motion: '/gfx/images/devices/motion.jpg',
 		};
 		let backgroundImage = null;
 

@@ -1,6 +1,11 @@
 import request from 'axios';
+import keyMirror from 'keymirror';
 
 export default class AbstractPlatform {
+
+	static Measurement = keyMirror({
+		LIGHT: null,
+	});
 
 	getDevices() {}
 	getDevice(id) {}

@@ -106,19 +106,47 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				const {
 					id,
 					time,
-					type,
-					self, // eslint-disable-line
-					source, // eslint-disable-line
-					...rest,
 				} = update.data.data;
+
+				const measurement = this._getMeasurement(update);
+
+				if (measurement === null) {
+					return null;
+				}
 
 				return {
 					id,
 					time,
-					type,
-					...rest,
+					...measurement,
 				};
-			});
+			})
+			.filter((update) => update !== null);
+	}
+
+	_getMeasurement(update) {
+		const parsers = {
+			c8y_LightMeasurement: this._getLightMeasurement.bind(this),
+		};
+
+		return Object.keys(parsers).reduce((measurement, name) => {
+			if (typeof update.data.data[name] !== 'undefined') {
+				measurement = parsers[name](update); // eslint-disable-line
+			}
+
+			return measurement;
+		}, null);
+	}
+
+	_getLightMeasurement(update) {
+		const info = update.data.data.c8y_LightMeasurement.e;
+
+		return {
+			type: AbstractPlatform.Measurement.LIGHT,
+			info: {
+				value: info.value,
+				unit: info.unit,
+			},
+		};
 	}
 
 	_performRealtimeSubscription(subscription) {

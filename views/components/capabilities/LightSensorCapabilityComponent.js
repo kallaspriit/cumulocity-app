@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
+import AbstractPlatform from '../../../src/AbstractPlatform';
 import GaugeComponent from '../GaugeComponent';
 
 class LightSensorCapabilityComponent extends Component {
 
 	static propTypes = {
-		device: PropTypes.object.isRequired,
-		realtimeInfo: PropTypes.array.isRequired,
+		info: PropTypes.object.isRequired,
+		realtimeUpdates: PropTypes.array.isRequired,
 	};
 
 	constructor(props) {
@@ -24,10 +25,10 @@ class LightSensorCapabilityComponent extends Component {
 
 	componentWillReceiveProps(newProps) {
 		const {
-			realtimeInfo,
+			realtimeUpdates,
 		} = this.props;
 
-		const measurement = this.getRealtimeMeasurement(realtimeInfo);
+		const measurement = this.getRealtimeMeasurement(realtimeUpdates);
 
 		if (measurement !== null) {
 			this.setState({
@@ -67,10 +68,9 @@ class LightSensorCapabilityComponent extends Component {
 		);
 	}
 
-	getRealtimeMeasurement(realtimeInfo) {
-		// TODO cumulocity specific
-		const measurement = realtimeInfo.find(
-			(item) => item.type === 'c8y_LightSensor'
+	getRealtimeMeasurement(updates) {
+		const measurement = updates.find(
+			(item) => item.type === AbstractPlatform.Measurement.LIGHT
 		) || null;
 
 		if (!measurement) {
@@ -78,8 +78,8 @@ class LightSensorCapabilityComponent extends Component {
 		}
 
 		return {
-			value: measurement.c8y_LightMeasurement.e.value,
-			unit: measurement.c8y_LightMeasurement.e.unit,
+			value: measurement.info.value,
+			unit: measurement.info.unit,
 		};
 	}
 
