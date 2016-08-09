@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import CompareArrows from 'material-ui/svg-icons/action/compare-arrows';
+import MenuItem from 'material-ui/MenuItem';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
@@ -30,7 +31,7 @@ class DevicesView extends Component {
 
 		return (
 			<div className="devices-view">
-				<HeaderComponent title="Devices" />
+				<HeaderComponent title="Devices" menus={this.renderHeaderMenus()} />
 				<AsyncComponent info={devices} render={this.renderDevices.bind(this)} />
 			</div>
 		);
@@ -38,9 +39,11 @@ class DevicesView extends Component {
 
 	renderDevices(devices) {
 		return (
-			<List>
-				{devices.map(this.renderDevice)}
-			</List>
+			<div className="main-contents">
+				<List>
+					{devices.map(this.renderDevice)}
+				</List>
+			</div>
 		);
 	}
 
@@ -54,6 +57,16 @@ class DevicesView extends Component {
 				onTouchTap={() => browserHistory.push(`/device/${device.id}`)}
 			/>
 		);
+	}
+
+	renderHeaderMenus() {
+		return [
+			<MenuItem onTouchTap={() => this.handleRefresh()}>Refresh</MenuItem>,
+		];
+	}
+
+	handleRefresh() {
+		this.props.getDevices();
 	}
 }
 

@@ -5,7 +5,6 @@ import { browserHistory } from 'react-router';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowBackIcon from 'material-ui/svg-icons/navigation/arrow-back';
 import ArrowForwardIcon from 'material-ui/svg-icons/navigation/arrow-forward';
@@ -16,14 +15,18 @@ class HeaderComponent extends Component {
 
 	static propTypes = {
 		title: PropTypes.string.isRequired,
+		menus: PropTypes.array,
 
 		openMainMenu: PropTypes.func.isRequired,
-	}
+	};
+
+	static defaultProps = {
+		menus: [],
+	};
 
 	static contextTypes = {
-		router: React.PropTypes.object.isRequired,
-		history: React.PropTypes.object.isRequired,
-	}
+		canGoBack: React.PropTypes.func.isRequired,
+	};
 
 	render() {
 		return (
@@ -37,7 +40,7 @@ class HeaderComponent extends Component {
 	}
 
 	renderIconElementLeft() {
-		const canGoBack = window.history.length > 1; // eslint-disable-line
+		const canGoBack = this.context.canGoBack();
 
 		if (!canGoBack) {
 			return (
@@ -55,6 +58,10 @@ class HeaderComponent extends Component {
 	}
 
 	renderIconElementRight() {
+		if (this.props.menus.length === 0) {
+			return null;
+		}
+
 		const menuOrigin = {
 			horizontal: 'right',
 			vertical: 'top',
@@ -68,8 +75,7 @@ class HeaderComponent extends Component {
 				targetOrigin={menuOrigin}
 				anchorOrigin={menuOrigin}
 			>
-				<MenuItem onTouchTap={this.handleOpen('device')}>Device</MenuItem>
-				<MenuItem onTouchTap={this.handleOpen('user')}>User</MenuItem>
+				{this.props.menus}
 			</IconMenu>
 		);
 	}

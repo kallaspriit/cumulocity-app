@@ -5,7 +5,8 @@
         "no-console": "off",
         "no-underscore-dangle": "off",
         "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
-        "react/prefer-stateless-function": "off"
+        "react/prefer-stateless-function": "off",
+        semi: ["error", "always"]
     },
     "globals": {
         "document": true,

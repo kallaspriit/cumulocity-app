@@ -42,39 +42,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._get(url).then(this._extractDevice.bind(this));
 	}
 
-	/*
-	_test() {
-		const channel = '/measurements/410706';
-
-		const cancel = this.getRealtimeUpdates(
-			channel,
-			(measurements) => {
-				measurements
-					.filter((measurement) => {
-						if (measurement.channel !== channel) {
-							return false;
-						}
-
-						if (typeof measurement.data.data.c8y_LightMeasurement === 'undefined') {
-							return false;
-						}
-
-						return true;
-					})
-					.forEach((measurement) => {
-						const info = measurement.data.data.c8y_LightMeasurement.e;
-
-						console.log(`light level: ${info.value} ${info.unit}`);
-					});
-			}
-		);
-
-		setTimeout(() => {
-			cancel();
-		}, 10000);
-	}
-	*/
-
 	getRealtimeUpdates(channel, callback) {
 		let isActive = true;
 
@@ -238,7 +205,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_extractDevices(response) {
-		return response.data.managedObjects.map(this._mapManagedObjectToDevice.bind(this));
+		return response.data.managedObjects.map(
+			this._mapManagedObjectToDevice.bind(this)
+		);
 	}
 
 	_extractDevice(response) {
@@ -262,7 +231,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			capabilities: this._extractCapabilities(info),
 		});
 
-		// console.log('mapped', info, mappedDevice);
+		// console.log('mapped', mappedDevice.name, info, mappedDevice);
 
 		return mappedDevice;
 	}

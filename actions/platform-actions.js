@@ -34,8 +34,6 @@ export const stopRealtimeUpdates = (channel) => (dispatch) => {
 		return;
 	}
 
-	console.log('stopRealtimeUpdates', channel);
-
 	cancel();
 
 	delete realtimeChannelToCancelMap[channel];
