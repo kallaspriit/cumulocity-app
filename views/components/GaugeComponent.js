@@ -34,8 +34,6 @@ export default class GaugeComponent extends Component {
 	componentWillReceiveProps({
 		value,
 	}) {
-		console.log(`new value: ${value}`);
-
 		const chart = this.chart.getChart();
 
 		chart.series[0].points[0].update(value);

@@ -42,32 +42,87 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._get(url).then(this._extractDevice.bind(this));
 	}
 
-	_testRealtime() {
+	/*
+	_test() {
 		const channel = '/measurements/410706';
 
-		this._performRealtimeSubscription('/measurements/410706').then((clientId) => {
+		const cancel = this.getRealtimeUpdates(
+			channel,
+			(measurements) => {
+				measurements
+					.filter((measurement) => {
+						if (measurement.channel !== channel) {
+							return false;
+						}
+
+						if (typeof measurement.data.data.c8y_LightMeasurement === 'undefined') {
+							return false;
+						}
+
+						return true;
+					})
+					.forEach((measurement) => {
+						const info = measurement.data.data.c8y_LightMeasurement.e;
+
+						console.log(`light level: ${info.value} ${info.unit}`);
+					});
+			}
+		);
+
+		setTimeout(() => {
+			cancel();
+		}, 10000);
+	}
+	*/
+
+	getRealtimeUpdates(channel, callback) {
+		let isActive = true;
+
+		this._performRealtimeSubscription(channel).then((clientId) => {
 			const connect = () => {
-				this._performRealtimeConnect(clientId).then((measurements) => {
-					measurements
-						.filter((measurement) => measurement.channel === channel)
-						.forEach((measurement) => {
-							const info = measurement.data.data.c8y_LightMeasurement.e;
+				this._performRealtimeConnect(clientId).then((updates) => {
+					callback(
+						this._generifyRealtimeUpdates(updates)
+					);
 
-							console.log(`light level: ${info.value} ${info.unit}`);
-						});
-
-					connect();
+					if (isActive) {
+						connect();
+					}
 				});
 			};
 
 			connect();
 		});
+
+		return () => {
+			isActive = false;
+		};
+	}
+
+	_generifyRealtimeUpdates(_updates) {
+		return _updates
+			.filter((update) => update.data && update.data.data)
+			.map((update) => {
+				const {
+					id,
+					time,
+					type,
+					self, // eslint-disable-line
+					source, // eslint-disable-line
+					...rest,
+				} = update.data.data;
+
+				return {
+					id,
+					time,
+					type,
+					...rest,
+				};
+			});
 	}
 
 	_performRealtimeSubscription(subscription) {
 		return this._performRealtimeHandshake().then((clientId) => {
-			console.log('performed handshake', clientId);
-
 			const url = this._buildUrl(CumulocityPlatform.urls.getRealtime());
 			const payload = [{
 				channel: '/meta/subscribe',
@@ -89,8 +144,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 					throw new Error(`Subscription failed (${info.error})`);
 				}
 
-				console.log('subscribed', clientId, info);
-
 				return clientId;
 			});
 		});
@@ -111,8 +164,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 				throw new Error('Got invalid handshake response');
 			}
-
-			console.log('connect', response.data);
 
 			return response.data;
 		});

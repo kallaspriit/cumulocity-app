@@ -4,6 +4,7 @@ export default class AbstractPlatform {
 
 	getDevices() {}
 	getDevice(id) {}
+	getRealtimeUpdates(channel, callback) {}
 
 	_get(url) {
 		return this._request({

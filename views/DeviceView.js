@@ -22,9 +22,18 @@ class DeviceView extends Component {
 	static propTypes = {
 		params: PropTypes.object.isRequired,
 		device: PropTypes.object.isRequired,
+		realtime: PropTypes.object.isRequired,
 
 		getDevice: PropTypes.func.isRequired,
+		getRealtimeUpdates: PropTypes.func.isRequired,
+		stopRealtimeUpdates: PropTypes.func.isRequired,
 	};
+
+	constructor(props) {
+		super(props);
+
+		this.isRealtimeUpdatesSetupComplete = false;
+	}
 
 	componentWillMount() {
 		this.props.getDevice(this.props.params.deviceId);
@@ -32,8 +41,23 @@ class DeviceView extends Component {
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.params.deviceId !== this.props.params.deviceId) {
+			this.stopRealtimeUpdates(this.props.params.deviceId);
+			this.setupRealtimeUpdates(newProps.params.deviceId);
+
 			this.props.getDevice(newProps.params.deviceId);
 		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.device.info !== null && !this.isRealtimeUpdatesSetupComplete) {
+			this.setupRealtimeUpdates(this.props.params.deviceId);
+
+			this.isRealtimeUpdatesSetupComplete = true;
+		}
+	}
+
+	componentWillUnmount() {
+		this.stopRealtimeUpdates();
 	}
 
 	render() {
@@ -54,13 +78,7 @@ class DeviceView extends Component {
 	}
 
 	renderDevice(info) {
-		const typeToBackgroundMap = {
-			c8y_Linux: '/gfx/images/Devices/computer.jpg',
-			Light: '/gfx/images/devices/light.jpg',
-		};
-		const backgroundImage = typeof typeToBackgroundMap[info.type] !== 'undefined'
-			? typeToBackgroundMap[info.type]
-			: typeToBackgroundMap[Object.keys(typeToBackgroundMap)[0]];
+		const backgroundImage = this.getBackgroundImage(info);
 
 		return (
 			<Card className="main-contents">
@@ -111,9 +129,16 @@ class DeviceView extends Component {
 	}
 
 	renderCapabilityWidget(info, capability) {
+		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
+		const realtimeInfo = this.props.realtime[channel] || [];
+		const capabilityProps = {
+			device: info,
+			realtimeInfo,
+		};
+
 		switch (capability.type) {
 			case CapabilityModel.Type.LIGHT_SENSOR:
-				return <LightSensorCapabilityComponent device={info} />;
+				return <LightSensorCapabilityComponent {...capabilityProps} />;
 
 			default:
 				console.warn(`capability type "${capability.type}" is not supported`);
@@ -144,11 +169,57 @@ class DeviceView extends Component {
 			/>
 		);
 	}
+
+	getBackgroundImage(info) {
+		const modelToBackgroundMap = {
+			RaspPi: '/gfx/images/Devices/raspberry.jpg',
+		};
+		const typeToBackgroundMap = {
+			c8y_Linux: '/gfx/images/Devices/computer.jpg',
+			Light: '/gfx/images/devices/light.jpg',
+		};
+		let backgroundImage = null;
+
+		backgroundImage = Object.keys(modelToBackgroundMap).reduce((background, pattern) => {
+			const regexp = new RegExp(pattern);
+
+			if (regexp.test(info.model)) {
+				background = modelToBackgroundMap[pattern]; // eslint-disable-line
+			}
+
+			return background;
+		}, backgroundImage);
+
+		if (backgroundImage === null) {
+			backgroundImage = typeof typeToBackgroundMap[info.type] !== 'undefined'
+				? typeToBackgroundMap[info.type]
+				: typeToBackgroundMap[Object.keys(typeToBackgroundMap)[0]];
+		}
+
+		return backgroundImage;
+	}
+
+	setupRealtimeUpdates(deviceId) {
+		const channel = this.getDeviceMeasurementsChannelName(deviceId);
+
+		this.props.getRealtimeUpdates(channel);
+	}
+
+	stopRealtimeUpdates(deviceId) {
+		const channel = this.getDeviceMeasurementsChannelName(deviceId);
+
+		this.props.stopRealtimeUpdates(channel);
+	}
+
+	getDeviceMeasurementsChannelName(deviceId) {
+		return `/measurements/${deviceId}`;
+	}
 }
 
 export default connect(
 	state => ({
 		device: state.device,
+		realtime: state.realtime,
 	}), {
 		...platformActions,
 	}

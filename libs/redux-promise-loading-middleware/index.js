@@ -49,6 +49,5 @@ export function getDefaultAsyncState(info = null) {
 		isLoading: false,
 		error: null,
 		info,
-		args: [],
 	};
 }
