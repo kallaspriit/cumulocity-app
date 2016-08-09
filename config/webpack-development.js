@@ -1,10 +1,10 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+import path from 'path';
+import webpack from 'webpack';
 
-const basePath = path.join(__dirname, '..');
+export const basePath = path.join(__dirname, '..');
+export const distributionPath = path.join(basePath, 'dist');
 
-module.exports = {
+export default {
 	// devtool: 'cheap-module-eval-source-map',
 	devtool: 'source-map',
 	entry: [
@@ -13,9 +13,9 @@ module.exports = {
 		'./app',
 	],
 	output: {
-		path: path.join(basePath, 'dist'),
+		path: distributionPath,
 		filename: 'bundle.js',
-		publicPath: '/static/',
+		publicPath: '/',
 	},
 	module: {
 		loaders: [{
@@ -36,6 +36,5 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
-		new ExtractTextPlugin('styles.css'),
 	],
 };
