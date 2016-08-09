@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { OPEN_MAIN_MENU, CLOSE_MAIN_MENU } from '../constants';
+import { OPEN_MAIN_MENU, CLOSE_MAIN_MENU } from '../config/constants';
 
 const defaultState = {
 	isOpen: false,

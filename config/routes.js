@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
-import RootView from './views/RootView';
-import DevicesView from './views/DevicesView';
-import DeviceView from './views/DeviceView';
+import RootView from '../views/RootView';
+import DevicesView from '../views/DevicesView';
+import DeviceView from '../views/DeviceView';
 
 export default [
 	<Route path="/" component={RootView}>

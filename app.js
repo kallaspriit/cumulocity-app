@@ -10,7 +10,7 @@ import SliderMonitor from 'redux-slider-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 import thunkMiddleware from 'redux-thunk';
 import promiseMiddleware from './libs/redux-promise-loading-middleware';
-import routes from './routes';
+import routes from './config/routes';
 import * as reducers from './reducers';
 
 // configure combined reduxer which includes the router

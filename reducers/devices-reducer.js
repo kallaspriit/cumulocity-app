@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { getDefaultAsyncState } from '../libs/redux-promise-loading-middleware';
-import { GET_DEVICES } from '../constants';
+import { GET_DEVICES } from '../config/constants';
 
 const defaultState = getDefaultAsyncState();
 

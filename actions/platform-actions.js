@@ -5,7 +5,7 @@ import {
 	GET_DEVICE,
 	GET_REALTIME_UPDATES,
 	STOP_REALTIME_UPDATES,
-} from '../constants';
+} from '../config/constants';
 
 const realtimeChannelToCancelMap = {};
 

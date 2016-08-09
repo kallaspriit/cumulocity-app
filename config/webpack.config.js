@@ -2,6 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const basePath = path.join(__dirname, '..');
+
 module.exports = {
 	// devtool: 'cheap-module-eval-source-map',
 	devtool: 'source-map',
@@ -11,7 +13,7 @@ module.exports = {
 		'./app',
 	],
 	output: {
-		path: path.join(__dirname, 'dist'),
+		path: path.join(basePath, 'dist'),
 		filename: 'bundle.js',
 		publicPath: '/static/',
 	},
@@ -20,13 +22,13 @@ module.exports = {
 			test: /\.js$/,
 			loaders: ['react-hot', 'babel'],
 			exclude: /node_modules/,
-			include: __dirname,
+			include: basePath,
 		}, {
 			test: /\.scss$/,
 			// loader: ExtractTextPlugin.extract('style', 'css?sourceMap', 'sass?sourceMap'),
 			loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
 			exclude: /node_modules/,
-			include: __dirname,
+			include: basePath,
 		}],
 	},
 	sassLoader: {

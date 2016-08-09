@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "IoT client experiment",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server/dev-server.js",
     "lint": "eslint -c .eslintrc .",
     "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-register",
     "test:watch": "npm test -- --watch"

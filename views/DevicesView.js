@@ -61,7 +61,7 @@ class DevicesView extends Component {
 
 	renderHeaderMenus() {
 		return [
-			<MenuItem onTouchTap={() => this.handleRefresh()}>Refresh</MenuItem>,
+			<MenuItem key={1} onTouchTap={() => this.handleRefresh()}>Refresh</MenuItem>,
 		];
 	}
 
