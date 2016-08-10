@@ -17,6 +17,7 @@ import LightSensorCapabilityComponent from './components/capabilities/LightSenso
 
 import * as platformActions from '../actions/platform-actions';
 import CapabilityModel from '../models/CapabilityModel';
+import MeasurementModel from '../models/MeasurementModel';
 
 class DeviceView extends Component {
 
@@ -129,13 +130,14 @@ class DeviceView extends Component {
 		);
 	}
 
-	renderCapabilityWidget(info, capability) {
+	renderCapabilityWidget(deviceInfo, capability) {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
 		const realtimeUpdates = this.props.realtime[channel] || [];
+		const measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates, capability.type);
 		const capabilityProps = {
 			capability,
-			deviceInfo: info,
-			realtimeUpdates,
+			deviceInfo,
+			measurements,
 		};
 
 		switch (capability.type) {
@@ -204,6 +206,22 @@ class DeviceView extends Component {
 		}
 
 		return backgroundImage;
+	}
+
+	getRealtimeUpdateMeasurements(realtimeUpdates, capabilityType) {
+		const measurements = [];
+
+		for (let i = 0; i < realtimeUpdates.length; i++) {
+			for (let j = 0; j < realtimeUpdates[i].length; j++) {
+				const item = realtimeUpdates[i][j];
+
+				if (item.type === MeasurementModel.Type.LIGHT) {
+					measurements.push(item);
+				}
+			}
+		}
+
+		return measurements;
 	}
 
 	setupRealtimeUpdates(deviceId) {

@@ -7,7 +7,7 @@ class HardwareCapabilityComponent extends Component {
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
 		deviceInfo: PropTypes.object.isRequired,
-		realtimeUpdates: PropTypes.array.isRequired,
+		measurements: PropTypes.array.isRequired,
 	};
 
 	render() {

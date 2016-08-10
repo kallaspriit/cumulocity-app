@@ -11,7 +11,7 @@ class LightSensorCapabilityComponent extends Component {
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
 		deviceInfo: PropTypes.object.isRequired,
-		realtimeUpdates: PropTypes.array.isRequired,
+		measurements: PropTypes.array.isRequired,
 	};
 
 	constructor(props) {
@@ -26,16 +26,16 @@ class LightSensorCapabilityComponent extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const {
-			realtimeUpdates,
+			measurements,
 		} = nextProps;
 
-		const measurement = this.getRealtimeMeasurement(realtimeUpdates);
+		const measurement = measurements.find((item) => item.type === MeasurementModel.Type.LIGHT) || null;
 
 		if (measurement !== null) {
 			this.setState({
 				isValid: true,
-				value: measurement.value,
-				unit: measurement.unit,
+				value: measurement.info.e.value,
+				unit: measurement.info.e.unit,
 			});
 		}
 	}
@@ -67,31 +67,6 @@ class LightSensorCapabilityComponent extends Component {
 				value={this.state.value}
 			/>
 		);
-	}
-
-	getRealtimeMeasurement(updates) {
-		let measurement = null;
-
-		for (let i = 0; i < updates.length; i++) {
-			for (let j = 0; j < updates[i].length; j++) {
-				const item = updates[i][j];
-
-				if (item.type === MeasurementModel.Type.LIGHT) {
-					measurement = item;
-
-					break;
-				}
-			}
-		}
-
-		if (!measurement) {
-			return null;
-		}
-
-		return {
-			value: measurement.info.e.value,
-			unit: measurement.info.e.unit,
-		};
 	}
 
 }
