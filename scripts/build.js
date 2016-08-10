@@ -66,6 +66,10 @@ function runWebpack(callback) {
 		}
 
 		console.log('webpack completed successfully, check the "dist" folder');
+		console.log(stats.toString({
+			chunks: false, // Makes the build much quieter
+			colors: true,
+		}));
 
 		callback();
 	});
