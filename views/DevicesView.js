@@ -54,7 +54,7 @@ class DevicesView extends Component {
 				primaryText={device.name}
 				secondaryText={device.serial && device.model ? `${device.model} - ${device.serial}` : 'n/a'}
 				leftIcon={<CompareArrows color={device.isOnline ? '#090' : '#900'} />}
-				onTouchTap={() => browserHistory.push(`/device/${device.id}`)}
+				onTouchTap={() => browserHistory.push(`/devices/${device.id}`)}
 			/>
 		);
 	}

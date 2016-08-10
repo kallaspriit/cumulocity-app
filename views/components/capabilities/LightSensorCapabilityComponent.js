@@ -14,34 +14,6 @@ class LightSensorCapabilityComponent extends Component {
 		measurements: PropTypes.array.isRequired,
 	};
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			isValid: false,
-			value: 0,
-			unit: '',
-		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const {
-			measurements,
-		} = nextProps;
-
-		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.LIGHT
-		) || null;
-
-		if (measurement !== null) {
-			this.setState({
-				isValid: true,
-				value: measurement.info.e.value,
-				unit: measurement.info.e.unit,
-			});
-		}
-	}
-
 	render() {
 		return (
 			<div className="capability-component light-sensor-capability-component">
@@ -51,7 +23,15 @@ class LightSensorCapabilityComponent extends Component {
 	}
 
 	renderContents() {
-		if (!this.state.isValid) {
+		const {
+			measurements,
+		} = this.props;
+
+		const measurement = measurements.find(
+			(item) => item.type === MeasurementModel.Type.LIGHT
+		) || null;
+
+		if (!measurement) {
 			return (
 				<div className="loader-wrap">
 					<CircularProgress />
@@ -59,14 +39,17 @@ class LightSensorCapabilityComponent extends Component {
 			);
 		}
 
+		const value = measurement.info.e.value;
+		const unit = measurement.info.e.unit;
+
 		return (
 			<GaugeComponent
 				title="Light intensity"
-				unit={this.state.unit}
+				unit={unit}
 				height={200}
 				min={0}
 				max={100}
-				value={this.state.value}
+				value={value}
 			/>
 		);
 	}

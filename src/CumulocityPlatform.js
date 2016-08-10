@@ -271,8 +271,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			capabilities: this._extractCapabilities(info),
 		});
 
-		// console.log('mapped', mappedDevice.name, info, mappedDevice);
-
 		return mappedDevice;
 	}
 

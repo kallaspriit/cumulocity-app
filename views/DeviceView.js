@@ -9,6 +9,7 @@ import Card from 'material-ui/Card/Card';
 import CardHeader from 'material-ui/Card/CardHeader';
 import CardMedia from 'material-ui/Card/CardMedia';
 import CardTitle from 'material-ui/Card/CardTitle';
+import MenuItem from 'material-ui/MenuItem';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
@@ -77,7 +78,7 @@ class DeviceView extends Component {
 
 		return (
 			<div className="device-view">
-				<HeaderComponent title={title} />
+				<HeaderComponent title={title} menus={this.renderHeaderMenus()} />
 				<AsyncComponent info={device} render={this.renderDevice.bind(this)} />
 			</div>
 		);
@@ -139,8 +140,6 @@ class DeviceView extends Component {
 		const realtimeUpdates = this.props.realtime[channel] || [];
 		let measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates);
 
-		console.log('realtime', measurements, realtimeUpdates, capability.type);
-
 		// use latest measurements if realtime info is not available
 		if (measurements.length === 0) {
 			measurements = this.props.measurements.info[deviceInfo.id] || [];
@@ -151,8 +150,6 @@ class DeviceView extends Component {
 			deviceInfo,
 			measurements,
 		};
-
-		console.log('renderCapabilityWidget', capability, measurements);
 
 		switch (capability.type) {
 			case CapabilityModel.Type.HARDWARE:
@@ -189,9 +186,19 @@ class DeviceView extends Component {
 			<ListItem
 				key={device.id}
 				primaryText={device.name}
-				onTouchTap={() => browserHistory.push(`/device/${device.id}`)}
+				onTouchTap={() => browserHistory.push(`/devices/${device.id}`)}
 			/>
 		);
+	}
+
+	renderHeaderMenus() {
+		return [
+			<MenuItem key={1} onTouchTap={() => this.handleRefresh()}>Refresh</MenuItem>,
+		];
+	}
+
+	handleRefresh() {
+		this.props.getDevice(this.props.params.deviceId);
 	}
 
 	getBackgroundImage(info) {

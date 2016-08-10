@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import DrawerMenuComponent from './components/DrawerMenuComponent';
 import CumulocityPlatform from '../src/CumulocityPlatform';
 import themeConfig from '../config/theme-config';
 import cumulocityConfig from '../config/cumulocity-config';
@@ -54,7 +53,7 @@ export default class RootView extends Component {
 			<MuiThemeProvider muiTheme={muiTheme}>
 				<div className="top-wrap">
 					{this.props.children}
-					<DrawerMenuComponent />
+					{/* <DrawerMenuComponent /> */}
 				</div>
 			</MuiThemeProvider>
 		);

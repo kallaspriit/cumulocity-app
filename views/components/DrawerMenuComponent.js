@@ -25,7 +25,6 @@ class DrawerMenuComponent extends Component {
 				disableSwipeToOpen={false}
 			>
 				<MenuItem onTouchTap={this.handleOpen('devices')}>Devices</MenuItem>
-				<MenuItem onTouchTap={this.handleOpen('device')}>Device</MenuItem>
 			</Drawer>
 		);
 	}

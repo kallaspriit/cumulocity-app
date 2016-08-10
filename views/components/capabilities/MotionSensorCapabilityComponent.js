@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
@@ -13,32 +14,6 @@ class MotionSensorCapabilityComponent extends Component {
 		measurements: PropTypes.array.isRequired,
 	};
 
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			isValid: false,
-			isMotionDetected: false,
-		};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const {
-			measurements,
-		} = nextProps;
-
-		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.MOTION
-		) || null;
-
-		if (measurement !== null) {
-			this.setState({
-				isValid: true,
-				isMotionDetected: measurement.info.state.value === 1,
-			});
-		}
-	}
-
 	render() {
 		return (
 			<div className="capability-component motion-sensor-capability-component">
@@ -48,7 +23,15 @@ class MotionSensorCapabilityComponent extends Component {
 	}
 
 	renderContents() {
-		if (!this.state.isValid) {
+		const {
+			measurements,
+		} = this.props;
+
+		const measurement = measurements.find(
+			(item) => item.type === MeasurementModel.Type.MOTION
+		) || null;
+
+		if (!measurement) {
 			return (
 				<div className="loader-wrap">
 					<CircularProgress />
@@ -56,8 +39,18 @@ class MotionSensorCapabilityComponent extends Component {
 			);
 		}
 
+		const isMotionDetected = measurement.info.state.value === 1;
+
+		const className = classNames(
+			'motion-status-wrap', {
+				'is-motion-detected': isMotionDetected,
+			}
+		);
+
 		return (
-			<div>{this.state.isMotionDetected ? 'Motion detected!' : 'No motion currently detected'}</div>
+			<div className={className}>
+				{isMotionDetected ? 'Motion detected' : 'No motion currently detected'}
+			</div>
 		);
 	}
 
