@@ -2,12 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import css from '../gfx/css/main.scss'; // eslint-disable-line no-unused-vars
 import DrawerMenuComponent from './components/DrawerMenuComponent';
 import CumulocityPlatform from '../src/CumulocityPlatform';
 import themeConfig from '../config/theme-config';
 import cumulocityConfig from '../config/cumulocity-config';
 import platformApi from '../apis/platform-api';
+
+// require stylesheet
+require('../gfx/css/main.scss');
 
 // use tap events
 injectTapEventPlugin({
