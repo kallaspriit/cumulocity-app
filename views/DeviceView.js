@@ -172,10 +172,10 @@ class DeviceView extends Component {
 
 	getBackgroundImage(info) {
 		const modelToBackgroundMap = {
-			RaspPi: '/gfx/images/Devices/raspberry.jpg',
+			RaspPi: '/gfx/images/devices/raspberry.jpg',
 		};
 		const typeToBackgroundMap = {
-			c8y_Linux: '/gfx/images/Devices/computer.jpg',
+			c8y_Linux: '/gfx/images/devices/computer.jpg',
 			Light: '/gfx/images/devices/light.jpg',
 			Motion: '/gfx/images/devices/motion.jpg',
 			Relay: '/gfx/images/devices/relay.jpg',
