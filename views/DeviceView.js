@@ -178,6 +178,7 @@ class DeviceView extends Component {
 			c8y_Linux: '/gfx/images/Devices/computer.jpg',
 			Light: '/gfx/images/devices/light.jpg',
 			Motion: '/gfx/images/devices/motion.jpg',
+			Relay: '/gfx/images/devices/relay.jpg',
 		};
 		let backgroundImage = null;
 
