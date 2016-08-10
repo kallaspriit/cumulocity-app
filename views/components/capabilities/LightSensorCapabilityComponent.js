@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
-import AbstractPlatform from '../../../src/AbstractPlatform';
+import MeasurementModel from '../../../models/MeasurementModel';
 import GaugeComponent from '../GaugeComponent';
 
 class LightSensorCapabilityComponent extends Component {
@@ -70,17 +70,27 @@ class LightSensorCapabilityComponent extends Component {
 	}
 
 	getRealtimeMeasurement(updates) {
-		const measurement = updates.find(
-			(item) => item.type === AbstractPlatform.Measurement.LIGHT
-		) || null;
+		let measurement = null;
+
+		for (let i = 0; i < updates.length; i++) {
+			for (let j = 0; j < updates[i].length; j++) {
+				const item = updates[i][j];
+
+				if (item.type === MeasurementModel.Type.LIGHT) {
+					measurement = item;
+
+					break;
+				}
+			}
+		}
 
 		if (!measurement) {
 			return null;
 		}
 
 		return {
-			value: measurement.info.value,
-			unit: measurement.info.unit,
+			value: measurement.info.e.value,
+			unit: measurement.info.e.unit,
 		};
 	}
 

@@ -7,7 +7,7 @@ export default class CapabilityModel extends AbstractModel {
 		UNSUPPORTED: null,
 		HARDWARE: null,
 		RELAY: null,
-		LIGHT_SENSOR: null,
+		LIGHT: null,
 	});
 
 	getSchema() {

@@ -1,6 +1,7 @@
 import AbstractPlatform from './AbstractPlatform';
 import DeviceModel from '../models/DeviceModel';
 import CapabilityModel from '../models/CapabilityModel';
+import MeasurementModel from '../models/MeasurementModel';
 
 export default class CumulocityPlatform extends AbstractPlatform {
 
@@ -42,8 +43,12 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 		this._capabilityTypeMapping = {
 			c8y_Relay: CapabilityModel.Type.RELAY,
-			c8y_LightSensor: CapabilityModel.Type.LIGHT_SENSOR,
+			c8y_LightSensor: CapabilityModel.Type.LIGHT,
 			c8y_Hardware: CapabilityModel.Type.HARDWARE,
+		};
+
+		this._measurementTypeMapping = {
+			c8y_LightMeasurement: MeasurementModel.Type.LIGHT,
 		};
 
 		this._realtimeId = 1;
@@ -100,51 +105,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	_generifyRealtimeUpdates(_updates) {
 		return _updates
 			.filter((update) => update.data && update.data.data)
-			.map((update) => {
-				const {
-					id,
-					time,
-				} = update.data.data;
-
-				const measurement = this._getMeasurement(update);
-
-				if (measurement === null) {
-					return null;
-				}
-
-				return {
-					id,
-					time,
-					...measurement,
-				};
-			})
+			.map((update) => this._extractMeasurement(update.data.data))
 			.filter((update) => update !== null);
-	}
-
-	_getMeasurement(update) {
-		const parsers = {
-			c8y_LightMeasurement: this._getLightMeasurement.bind(this),
-		};
-
-		return Object.keys(parsers).reduce((measurement, name) => {
-			if (typeof update.data.data[name] !== 'undefined') {
-				measurement = parsers[name](update); // eslint-disable-line
-			}
-
-			return measurement;
-		}, null);
-	}
-
-	_getLightMeasurement(update) {
-		const info = update.data.data.c8y_LightMeasurement.e;
-
-		return {
-			type: AbstractPlatform.Measurement.LIGHT,
-			info: {
-				value: info.value,
-				unit: info.unit,
-			},
-		};
 	}
 
 	_performRealtimeSubscription(subscription) {
@@ -251,9 +213,32 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 
 	_extractCurrentMeasurement(response) {
-		console.log('_extractCurrentMeasurement', response);
+		return response.data.measurements.map(
+			this._extractMeasurement.bind(this)
+		);
+	}
 
-		return null;
+	_extractMeasurement(info) {
+		const capabilityType = this._mapCapabilityType(info.type);
+
+		return Object.keys(info).reduce((measurements, key) => {
+			const measurementType = this._mapMeasurementType(key);
+
+			if (measurementType !== MeasurementModel.Type.UNSUPPORTED) {
+				const measurementInfo = info[key];
+				const measurement = new MeasurementModel({
+					capability: capabilityType,
+					type: measurementType,
+					info: measurementInfo,
+				});
+
+				console.log('_extractMeasurement', measurement);
+
+				measurements.push(measurement);
+			}
+
+			return measurements;
+		}, []);
 	}
 
 	_mapManagedObjectToDevice(info) {
@@ -286,6 +271,14 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._capabilityTypeMapping[type];
 	}
 
+	_mapMeasurementType(type) {
+		if (typeof this._measurementTypeMapping[type] === 'undefined') {
+			return MeasurementModel.Type.UNSUPPORTED;
+		}
+
+		return this._measurementTypeMapping[type];
+	}
+
 	_extractCapabilities(info) {
 		return Object.keys(info).reduce((capabilities, key) => {
 			const capabilityType = this._mapCapabilityType(key);
@@ -298,8 +291,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				});
 
 				capabilities.push(capability);
-
-				console.log('found capability', capability, capabilityInfo);
 			}
 
 			return capabilities;

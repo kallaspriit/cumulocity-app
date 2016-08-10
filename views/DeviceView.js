@@ -142,7 +142,7 @@ class DeviceView extends Component {
 			case CapabilityModel.Type.HARDWARE:
 				return <HardwareCapabilityComponent {...capabilityProps} />;
 
-			case CapabilityModel.Type.LIGHT_SENSOR:
+			case CapabilityModel.Type.LIGHT:
 				return <LightSensorCapabilityComponent {...capabilityProps} />;
 
 			default:
