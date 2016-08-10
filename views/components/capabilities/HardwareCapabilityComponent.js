@@ -20,7 +20,7 @@ class HardwareCapabilityComponent extends Component {
 
 	renderContents() {
 		return (
-			<ul>
+			<ul className="info-list">
 				{Object.keys(this.props.capability.info).map(
 					(key) => this.renderHardwareListItem(key, this.props.capability.info[key])
 				)}
@@ -35,7 +35,6 @@ class HardwareCapabilityComponent extends Component {
 			</li>
 		);
 	}
-
 }
 
 export default connect(
