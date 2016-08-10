@@ -5,12 +5,26 @@ import {
 	GET_DEVICE,
 	GET_REALTIME_UPDATES,
 	STOP_REALTIME_UPDATES,
+	GET_DEVICE_LATEST_MEASUREMENTS,
 } from '../config/constants';
 
 const realtimeChannelToCancelMap = {};
 
-export const getDevices = createAction(GET_DEVICES, platformApi.getDevices);
-export const getDevice = createAction(GET_DEVICE, platformApi.getDevice);
+export const getDevices = createAction(
+	GET_DEVICES,
+	platformApi.getDevices
+);
+
+export const getDevice = createAction(
+	GET_DEVICE,
+	platformApi.getDevice
+);
+
+export const getDeviceLatestMeasurements = createAction(
+	GET_DEVICE_LATEST_MEASUREMENTS,
+	platformApi.getDeviceLatestMeasurements
+);
+
 export const getRealtimeUpdates = (channel) => (dispatch) => {
 	dispatch(
 		createAction(GET_REALTIME_UPDATES)({

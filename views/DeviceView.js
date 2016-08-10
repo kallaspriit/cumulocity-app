@@ -25,8 +25,10 @@ class DeviceView extends Component {
 		params: PropTypes.object.isRequired,
 		device: PropTypes.object.isRequired,
 		realtime: PropTypes.object.isRequired,
+		measurements: PropTypes.object.isRequired,
 
 		getDevice: PropTypes.func.isRequired,
+		getDeviceLatestMeasurements: PropTypes.func.isRequired,
 		getRealtimeUpdates: PropTypes.func.isRequired,
 		stopRealtimeUpdates: PropTypes.func.isRequired,
 	};
@@ -34,7 +36,7 @@ class DeviceView extends Component {
 	constructor(props) {
 		super(props);
 
-		this.isRealtimeUpdatesSetupComplete = false;
+		this.isInitialDataLoaded = false;
 	}
 
 	componentWillMount() {
@@ -45,16 +47,18 @@ class DeviceView extends Component {
 		if (nextProps.params.deviceId !== this.props.params.deviceId) {
 			this.stopRealtimeUpdates(this.props.params.deviceId);
 			this.setupRealtimeUpdates(nextProps.params.deviceId);
+			this.props.getDeviceLatestMeasurements(nextProps.params.deviceId);
 
 			this.props.getDevice(nextProps.params.deviceId);
 		}
 	}
 
 	componentDidUpdate() {
-		if (this.props.device.info !== null && !this.isRealtimeUpdatesSetupComplete) {
-			this.setupRealtimeUpdates(this.props.params.deviceId);
+		if (this.props.device.info !== null && !this.isInitialDataLoaded) {
+			this.isInitialDataLoaded = true;
 
-			this.isRealtimeUpdatesSetupComplete = true;
+			this.setupRealtimeUpdates(this.props.params.deviceId);
+			this.props.getDeviceLatestMeasurements(this.props.params.deviceId);
 		}
 	}
 
@@ -133,12 +137,20 @@ class DeviceView extends Component {
 	renderCapabilityWidget(deviceInfo, capability) {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
 		const realtimeUpdates = this.props.realtime[channel] || [];
-		const measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates, capability.type);
+		let measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates, capability.type);
+
+		// use latest measurements if realtime info is not available
+		if (measurements.length === 0) {
+			measurements = this.props.measurements.info[deviceInfo.id] || [];
+		}
+
 		const capabilityProps = {
 			capability,
 			deviceInfo,
 			measurements,
 		};
+
+		console.log('renderCapabilityWidget', capability, measurements);
 
 		switch (capability.type) {
 			case CapabilityModel.Type.HARDWARE:
@@ -245,6 +257,7 @@ export default connect(
 	state => ({
 		device: state.device,
 		realtime: state.realtime,
+		measurements: state.measurements,
 	}), {
 		...platformActions,
 	}

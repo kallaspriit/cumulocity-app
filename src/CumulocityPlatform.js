@@ -26,20 +26,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
 			getDevice: (id) => `/inventory/managedObjects/${id}`,
 			getRealtime: () => 'cep/realtime',
-			getCapabilityCurrentMeasurements: (deviceId, capabilityType) => {
-				const dateTo = this._formatDate(
-					this._getTomorrowsDate()
-				);
-
-				return `/measurement/measurements
-					?dateFrom=1970-01-01
-					&dateTo=${dateTo}
-					&fragmentType=${capabilityType}
-					&pageSize=1
-					&revert=true
-					&source=${deviceId}`;
-			},
-			getDeviceCurrentMeasurements: (deviceId) => {
+			getDeviceLatestMeasurements: (deviceId) => {
 				const dateTo = this._formatDate(
 					this._getTomorrowsDate()
 				);
@@ -106,33 +93,21 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		};
 	}
 
-	getCapabilityCurrentMeasurements(deviceId, capabilityType) {
+	getDeviceLatestMeasurements(deviceId) {
 		const url = this._buildUrl(
-			this.urls.getCapabilityCurrentMeasurements(deviceId, capabilityType)
+			this.urls.getDeviceLatestMeasurements(deviceId)
 		);
 
-		return this._get(url).then(
-			(response) => this._extractMeasurements(response.data.measurements[0])
-		);
-	}
-
-	getDeviceCurrentMeasurements(deviceId) {
-		const url = this._buildUrl(
-			this.urls.getDeviceCurrentMeasurements(deviceId)
-		);
-
-		return this._get(url).then(this._extractDeviceCurrentMeasurements.bind(this));
-	}
-
-	_extractDeviceCurrentMeasurements(response) {
-		return response.data.measurements.reduce((result, item) => {
-			const measurements = this._extractMeasurements(item);
-
-			return [
+		return this._get(url).then((response) => {
+			const measurements = response.data.measurements.reduce((result, item) => [
 				...result,
-				...measurements,
-			];
-		}, []);
+				...this._extractMeasurements(item),
+			], []);
+
+			return {
+				[deviceId]: measurements,
+			};
+		});
 	}
 
 	// rest is private
