@@ -101,4 +101,5 @@ export default class RootView extends Component {
 window.app = {
 	...window.app || {},
 	cumulocity: cumulocityPlatform,
+	platform: platformApi,
 };

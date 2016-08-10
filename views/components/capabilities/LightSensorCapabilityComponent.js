@@ -9,7 +9,8 @@ import GaugeComponent from '../GaugeComponent';
 class LightSensorCapabilityComponent extends Component {
 
 	static propTypes = {
-		info: PropTypes.object.isRequired,
+		capability: PropTypes.object.isRequired,
+		deviceInfo: PropTypes.object.isRequired,
 		realtimeUpdates: PropTypes.array.isRequired,
 	};
 

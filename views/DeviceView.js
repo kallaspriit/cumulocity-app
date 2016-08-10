@@ -12,6 +12,7 @@ import CardTitle from 'material-ui/Card/CardTitle';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
+import HardwareCapabilityComponent from './components/capabilities/HardwareCapabilityComponent';
 import LightSensorCapabilityComponent from './components/capabilities/LightSensorCapabilityComponent';
 
 import * as platformActions from '../actions/platform-actions';
@@ -132,11 +133,15 @@ class DeviceView extends Component {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
 		const realtimeUpdates = this.props.realtime[channel] || [];
 		const capabilityProps = {
-			info,
+			capability,
+			deviceInfo: info,
 			realtimeUpdates,
 		};
 
 		switch (capability.type) {
+			case CapabilityModel.Type.HARDWARE:
+				return <HardwareCapabilityComponent {...capabilityProps} />;
+
 			case CapabilityModel.Type.LIGHT_SENSOR:
 				return <LightSensorCapabilityComponent {...capabilityProps} />;
 

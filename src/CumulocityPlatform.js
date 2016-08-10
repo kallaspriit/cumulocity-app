@@ -4,14 +4,6 @@ import CapabilityModel from '../models/CapabilityModel';
 
 export default class CumulocityPlatform extends AbstractPlatform {
 
-	static urls = {
-		getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
-		getDevice: (id) => `/inventory/managedObjects/${id}`,
-		getRealtime: () => 'cep/realtime',
-	};
-
-	_realtimeId = 1;
-
 	constructor({
 		host,
 		protocol,
@@ -28,16 +20,47 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			username,
 			password,
 		};
+
+		this.urls = {
+			getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
+			getDevice: (id) => `/inventory/managedObjects/${id}`,
+			getRealtime: () => 'cep/realtime',
+			getCurrentMeasurement: (deviceId, capabilityType) => {
+				const dateTo = this._formatDate(
+					this._getTomorrowsDate()
+				);
+
+				return `/measurement/measurements
+					?dateFrom=1970-01-01
+					&dateTo=${dateTo}
+					&fragmentType=${capabilityType}
+					&pageSize=1
+					&revert=true
+					&source=${deviceId}`;
+			},
+		};
+
+		this._capabilityTypeMapping = {
+			c8y_Relay: CapabilityModel.Type.RELAY,
+			c8y_LightSensor: CapabilityModel.Type.LIGHT_SENSOR,
+			c8y_Hardware: CapabilityModel.Type.HARDWARE,
+		};
+
+		this._realtimeId = 1;
 	}
 
 	getDevices() {
-		const url = this._buildUrl(CumulocityPlatform.urls.getDevices());
+		const url = this._buildUrl(
+			this.urls.getDevices()
+		);
 
 		return this._get(url).then(this._extractDevices.bind(this));
 	}
 
 	getDevice(id) {
-		const url = this._buildUrl(CumulocityPlatform.urls.getDevice(id));
+		const url = this._buildUrl(
+			this.urls.getDevice(id)
+		);
 
 		return this._get(url).then(this._extractDevice.bind(this));
 	}
@@ -64,6 +87,14 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return () => {
 			isActive = false;
 		};
+	}
+
+	getCurrentMeasurement(deviceId, capabilityType) {
+		const url = this._buildUrl(
+			this.urls.getCurrentMeasurement(deviceId, capabilityType)
+		);
+
+		return this._get(url).then(this._extractCurrentMeasurement.bind(this));
 	}
 
 	_generifyRealtimeUpdates(_updates) {
@@ -118,7 +149,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 	_performRealtimeSubscription(subscription) {
 		return this._performRealtimeHandshake().then((clientId) => {
-			const url = this._buildUrl(CumulocityPlatform.urls.getRealtime());
+			const url = this._buildUrl(this.urls.getRealtime());
 			const payload = [{
 				channel: '/meta/subscribe',
 				id: this._getNextRealtimeId(),
@@ -145,7 +176,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_performRealtimeConnect(clientId) {
-		const url = this._buildUrl(CumulocityPlatform.urls.getRealtime());
+		const url = this._buildUrl(
+			this.urls.getRealtime()
+		);
 		const payload = [{
 			clientId,
 			id: this._getNextRealtimeId(),
@@ -165,7 +198,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_performRealtimeHandshake() {
-		const url = this._buildUrl(CumulocityPlatform.urls.getRealtime());
+		const url = this._buildUrl(
+			this.urls.getRealtime()
+		);
 		const payload = [{
 			channel: '/meta/handshake',
 			id: this._getNextRealtimeId(),
@@ -214,6 +249,13 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._mapManagedObjectToDevice(response.data);
 	}
 
+
+	_extractCurrentMeasurement(response) {
+		console.log('_extractCurrentMeasurement', response);
+
+		return null;
+	}
+
 	_mapManagedObjectToDevice(info) {
 		const mappedDevice = new DeviceModel({
 			id: info.id,
@@ -236,23 +278,28 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return mappedDevice;
 	}
 
+	_mapCapabilityType(type) {
+		if (typeof this._capabilityTypeMapping[type] === 'undefined') {
+			return CapabilityModel.Type.UNSUPPORTED;
+		}
+
+		return this._capabilityTypeMapping[type];
+	}
+
 	_extractCapabilities(info) {
 		return Object.keys(info).reduce((capabilities, key) => {
-			switch (key) {
-				case 'c8y_Relay':
-					capabilities.push(new CapabilityModel({
-						type: CapabilityModel.Type.RELAY,
-					}));
-					break;
+			const capabilityType = this._mapCapabilityType(key);
 
-				case 'c8y_LightSensor':
-					capabilities.push(new CapabilityModel({
-						type: CapabilityModel.Type.LIGHT_SENSOR,
-					}));
-					break;
+			if (capabilityType !== CapabilityModel.Type.UNSUPPORTED) {
+				const capabilityInfo = info[key];
+				const capability = new CapabilityModel({
+					type: capabilityType,
+					info: capabilityInfo,
+				});
 
-				default:
-					// ignore
+				capabilities.push(capability);
+
+				console.log('found capability', capability, capabilityInfo);
 			}
 
 			return capabilities;
@@ -274,6 +321,14 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				password: this.config.password,
 			},
 		};
+	}
+
+	_formatDate(date = new Date()) {
+		return date.toISOString().substr(0, 10);
+	}
+
+	_getTomorrowsDate() {
+		return new Date(Date.now() + (24 * 60 * 60 * 1000));
 	}
 
 }
