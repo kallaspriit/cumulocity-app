@@ -8,6 +8,10 @@ const app = express();
 app.use('/gfx', express.static(path.join(basePath, 'gfx')));
 app.use('/static', express.static(path.join(basePath, 'static')));
 
+app.get('/manifest.json', (req, res) => {
+	res.sendFile(path.join(basePath, 'manifest.json'));
+});
+
 app.get('*', (req, res) => {
 	res.sendFile(path.join(basePath, 'index.html'));
 });
