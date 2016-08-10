@@ -14,10 +14,10 @@ import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
 import HardwareCapabilityComponent from './components/capabilities/HardwareCapabilityComponent';
 import LightSensorCapabilityComponent from './components/capabilities/LightSensorCapabilityComponent';
+import MotionSensorCapabilityComponent from './components/capabilities/MotionSensorCapabilityComponent';
 
 import * as platformActions from '../actions/platform-actions';
 import CapabilityModel from '../models/CapabilityModel';
-import MeasurementModel from '../models/MeasurementModel';
 
 class DeviceView extends Component {
 
@@ -137,7 +137,9 @@ class DeviceView extends Component {
 	renderCapabilityWidget(deviceInfo, capability) {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
 		const realtimeUpdates = this.props.realtime[channel] || [];
-		let measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates, capability.type);
+		let measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates);
+
+		console.log('realtime', measurements, realtimeUpdates, capability.type);
 
 		// use latest measurements if realtime info is not available
 		if (measurements.length === 0) {
@@ -158,6 +160,9 @@ class DeviceView extends Component {
 
 			case CapabilityModel.Type.LIGHT:
 				return <LightSensorCapabilityComponent {...capabilityProps} />;
+
+			case CapabilityModel.Type.MOTION:
+				return <MotionSensorCapabilityComponent {...capabilityProps} />;
 
 			default:
 				console.warn(`capability type "${capability.type}" is not supported`);
@@ -220,16 +225,12 @@ class DeviceView extends Component {
 		return backgroundImage;
 	}
 
-	getRealtimeUpdateMeasurements(realtimeUpdates, capabilityType) {
+	getRealtimeUpdateMeasurements(realtimeUpdates) {
 		const measurements = [];
 
 		for (let i = 0; i < realtimeUpdates.length; i++) {
 			for (let j = 0; j < realtimeUpdates[i].length; j++) {
-				const item = realtimeUpdates[i][j];
-
-				if (item.type === MeasurementModel.Type.LIGHT) {
-					measurements.push(item);
-				}
+				measurements.push(realtimeUpdates[i][j]);
 			}
 		}
 

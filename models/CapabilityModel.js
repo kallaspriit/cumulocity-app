@@ -8,6 +8,7 @@ export default class CapabilityModel extends AbstractModel {
 		HARDWARE: null,
 		RELAY: null,
 		LIGHT: null,
+		MOTION: null,
 	});
 
 	getSchema() {

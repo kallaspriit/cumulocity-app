@@ -43,11 +43,13 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		this._capabilityTypeMapping = {
 			c8y_Relay: CapabilityModel.Type.RELAY,
 			c8y_LightSensor: CapabilityModel.Type.LIGHT,
+			c8y_MotionSensor: CapabilityModel.Type.MOTION,
 			c8y_Hardware: CapabilityModel.Type.HARDWARE,
 		};
 
 		this._measurementTypeMapping = {
 			c8y_LightMeasurement: MeasurementModel.Type.LIGHT,
+			com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: MeasurementModel.Type.MOTION,
 		};
 
 		this._realtimeId = 1;
@@ -217,15 +219,12 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_extractMeasurements(info) {
-		const capabilityType = this._mapCapabilityType(info.type);
-
 		return Object.keys(info).reduce((measurements, key) => {
 			const measurementType = this._mapMeasurementType(key);
 
 			if (measurementType !== MeasurementModel.Type.UNSUPPORTED) {
 				const measurementInfo = info[key];
 				const measurement = new MeasurementModel({
-					capability: capabilityType,
 					type: measurementType,
 					info: measurementInfo,
 				});

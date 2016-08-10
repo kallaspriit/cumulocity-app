@@ -11,11 +11,18 @@ BODY {
 	padding-top: 70px;
 }
 
+.capability-component {
+	.loader-wrap {
+		display: flex;
+		justify-content: center;
+		padding: 50px 0;
+	}
+}
+
 @import "views/device-view";
 
 @import "components/header-component";
 @import "components/loader-component";
 @import "components/error-component";
 
-@import "components/capabilities/light-sensor-capability-component";
 @import "components/capabilities/hardware-capability-component";

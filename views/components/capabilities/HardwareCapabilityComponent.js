@@ -12,7 +12,7 @@ class HardwareCapabilityComponent extends Component {
 
 	render() {
 		return (
-			<div className="hardware-capability-component">
+			<div className="capability-component hardware-capability-component">
 				{this.renderContents()}
 			</div>
 		);
