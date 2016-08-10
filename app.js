@@ -9,6 +9,7 @@ import LogMonitor from 'redux-devtools-log-monitor';
 import SliderMonitor from 'redux-slider-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 import thunkMiddleware from 'redux-thunk';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import promiseMiddleware from './libs/redux-promise-loading-middleware';
 import routes from './config/routes';
 import * as reducers from './reducers';
@@ -44,6 +45,15 @@ const store = createStore(
 
 // configure router history
 const history = syncHistoryWithStore(browserHistory, store);
+
+// use tap events
+injectTapEventPlugin({
+	shouldRejectClick: (lastTouchEventTimestamp, clickEventTimestamp) => {
+		const diff = clickEventTimestamp - lastTouchEventTimestamp;
+
+		return diff < 2000;
+	},
+});
 
 // render the application
 ReactDOM.render(

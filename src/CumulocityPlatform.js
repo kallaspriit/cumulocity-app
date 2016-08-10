@@ -26,7 +26,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
 			getDevice: (id) => `/inventory/managedObjects/${id}`,
 			getRealtime: () => 'cep/realtime',
-			getCurrentMeasurement: (deviceId, capabilityType) => {
+			getCapabilityCurrentMeasurements: (deviceId, capabilityType) => {
 				const dateTo = this._formatDate(
 					this._getTomorrowsDate()
 				);
@@ -35,6 +35,18 @@ export default class CumulocityPlatform extends AbstractPlatform {
 					?dateFrom=1970-01-01
 					&dateTo=${dateTo}
 					&fragmentType=${capabilityType}
+					&pageSize=1
+					&revert=true
+					&source=${deviceId}`;
+			},
+			getDeviceCurrentMeasurements: (deviceId) => {
+				const dateTo = this._formatDate(
+					this._getTomorrowsDate()
+				);
+
+				return `/measurement/measurements
+					?dateFrom=1970-01-01
+					&dateTo=${dateTo}
 					&pageSize=1
 					&revert=true
 					&source=${deviceId}`;
@@ -94,18 +106,40 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		};
 	}
 
-	getCurrentMeasurement(deviceId, capabilityType) {
+	getCapabilityCurrentMeasurements(deviceId, capabilityType) {
 		const url = this._buildUrl(
-			this.urls.getCurrentMeasurement(deviceId, capabilityType)
+			this.urls.getCapabilityCurrentMeasurements(deviceId, capabilityType)
 		);
 
-		return this._get(url).then(this._extractCurrentMeasurement.bind(this));
+		return this._get(url).then(
+			(response) => this._extractMeasurements(response.data.measurements[0])
+		);
 	}
 
+	getDeviceCurrentMeasurements(deviceId) {
+		const url = this._buildUrl(
+			this.urls.getDeviceCurrentMeasurements(deviceId)
+		);
+
+		return this._get(url).then(this._extractDeviceCurrentMeasurements.bind(this));
+	}
+
+	_extractDeviceCurrentMeasurements(response) {
+		return response.data.measurements.reduce((result, item) => {
+			const measurements = this._extractMeasurements(item);
+
+			return [
+				...result,
+				...measurements,
+			];
+		}, []);
+	}
+
+	// rest is private
 	_generifyRealtimeUpdates(_updates) {
 		return _updates
 			.filter((update) => update.data && update.data.data)
-			.map((update) => this._extractMeasurement(update.data.data))
+			.map((update) => this._extractMeasurements(update.data.data))
 			.filter((update) => update !== null);
 	}
 
@@ -197,10 +231,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		});
 	}
 
-	_getNextRealtimeId() {
-		return this._realtimeId++;
-	}
-
 	_extractDevices(response) {
 		return response.data.managedObjects.map(
 			this._mapManagedObjectToDevice.bind(this)
@@ -211,14 +241,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._mapManagedObjectToDevice(response.data);
 	}
 
-
-	_extractCurrentMeasurement(response) {
-		return response.data.measurements.map(
-			this._extractMeasurement.bind(this)
-		);
-	}
-
-	_extractMeasurement(info) {
+	_extractMeasurements(info) {
 		const capabilityType = this._mapCapabilityType(info.type);
 
 		return Object.keys(info).reduce((measurements, key) => {
@@ -232,12 +255,28 @@ export default class CumulocityPlatform extends AbstractPlatform {
 					info: measurementInfo,
 				});
 
-				console.log('_extractMeasurement', measurement);
-
 				measurements.push(measurement);
 			}
 
 			return measurements;
+		}, []);
+	}
+
+	_extractCapabilities(info) {
+		return Object.keys(info).reduce((capabilities, key) => {
+			const capabilityType = this._mapCapabilityType(key);
+
+			if (capabilityType !== CapabilityModel.Type.UNSUPPORTED) {
+				const capabilityInfo = info[key];
+				const capability = new CapabilityModel({
+					type: capabilityType,
+					info: capabilityInfo,
+				});
+
+				capabilities.push(capability);
+			}
+
+			return capabilities;
 		}, []);
 	}
 
@@ -279,26 +318,12 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._measurementTypeMapping[type];
 	}
 
-	_extractCapabilities(info) {
-		return Object.keys(info).reduce((capabilities, key) => {
-			const capabilityType = this._mapCapabilityType(key);
-
-			if (capabilityType !== CapabilityModel.Type.UNSUPPORTED) {
-				const capabilityInfo = info[key];
-				const capability = new CapabilityModel({
-					type: capabilityType,
-					info: capabilityInfo,
-				});
-
-				capabilities.push(capability);
-			}
-
-			return capabilities;
-		}, []);
-	}
-
 	_mapChildDevice(info) {
 		return this._mapManagedObjectToDevice(info.managedObject);
+	}
+
+	_getNextRealtimeId() {
+		return this._realtimeId++;
 	}
 
 	_buildUrl(query) {

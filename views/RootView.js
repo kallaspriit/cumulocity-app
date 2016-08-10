@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import DrawerMenuComponent from './components/DrawerMenuComponent';
@@ -10,15 +9,6 @@ import platformApi from '../apis/platform-api';
 
 // require stylesheet
 require('../gfx/css/main.scss');
-
-// use tap events
-injectTapEventPlugin({
-	shouldRejectClick: (lastTouchEventTimestamp, clickEventTimestamp) => {
-		const diff = clickEventTimestamp - lastTouchEventTimestamp;
-
-		return diff < 2000;
-	},
-});
 
 // setup theme
 const muiTheme = getMuiTheme(themeConfig);

@@ -10,7 +10,8 @@ export default class AbstractPlatform {
 	getDevices() {}
 	getDevice(id) {}
 	getRealtimeUpdates(channel, callback) {}
-	getCurrentMeasurement(deviceId, capabilityType) {}
+	getCapabilityCurrentMeasurements(deviceId, capabilityType) {}
+	getDeviceCurrentMeasurements(deviceId) {}
 
 	_get(url) {
 		return this._request({
