@@ -2,6 +2,7 @@ import webpack from 'webpack';
 import rimraf from 'rimraf';
 import mkdirp from 'mkdirp';
 import ncp from 'ncp';
+import fs from 'fs';
 
 import productionConfig from '../config/webpack-production';
 
@@ -50,6 +51,10 @@ function copyStaticAssets(callback) {
 
 			return;
 		}
+
+		fs.createReadStream('./manifest.json').pipe(
+			fs.createWriteStream('./dist/manifest.json')
+		);
 
 		callback();
 	});
