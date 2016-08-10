@@ -3,4 +3,6 @@
 
 ## Tasks
 - ```npm start``` - starts the hot-reloaded dev server.
-- ```npm lint``` - lints the codebase using eslint.
+- ```npm build``` - builds the production version in "dist" folder.
+- ```npm server``` - serves the production version from the "dist" folder.
+- ```npm lint``` - lints the codebase for errors.
