@@ -5,7 +5,7 @@
   "scripts": {
     "start": "babel-node scripts/start.js",
     "build": "babel-node scripts/build.js",
-    "server": "babel-node scripts/server.js",
+    "server": "babel-node scripts/server.js 8080",
     "lint": "eslint -c .eslintrc .",
     "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-register",
     "test:watch": "npm test -- --watch"
