@@ -167,7 +167,7 @@ class AuthenticationView extends Component {
 			this.isRedirecting = true;
 
 			setTimeout(() => {
-				browserHistory.push('/devices');
+				browserHistory.replace('/devices');
 			}, 2000);
 		}
 	}
