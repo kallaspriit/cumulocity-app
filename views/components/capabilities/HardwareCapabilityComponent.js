@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import changeCase from 'change-case';
 
+import CapabilityModel from '../../../models/CapabilityModel';
+
 class HardwareCapabilityComponent extends Component {
 
 	static propTypes = {
@@ -9,6 +11,10 @@ class HardwareCapabilityComponent extends Component {
 		deviceInfo: PropTypes.object.isRequired,
 		measurements: PropTypes.array.isRequired,
 	};
+
+	static getType() {
+		return CapabilityModel.Type.HARDWARE;
+	}
 
 	render() {
 		return (

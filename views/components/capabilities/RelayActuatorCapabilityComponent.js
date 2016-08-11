@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
 import CapabilityModel from '../../../models/CapabilityModel';
 import MeasurementModel from '../../../models/MeasurementModel';
-import GaugeComponent from '../GaugeComponent';
 
-class LightSensorCapabilityComponent extends Component {
+class RelayActuatorCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
@@ -16,12 +16,12 @@ class LightSensorCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return CapabilityModel.Type.LIGHT;
+		return CapabilityModel.Type.RELAY;
 	}
 
 	render() {
 		return (
-			<div className="capability-component light-sensor-capability-component">
+			<div className="capability-component relay-actuator-capability-component">
 				{this.renderContents()}
 			</div>
 		);
@@ -33,7 +33,7 @@ class LightSensorCapabilityComponent extends Component {
 		} = this.props;
 
 		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.LIGHT
+			(item) => item.type === MeasurementModel.Type.RELAY
 		) || null;
 
 		if (!measurement) {
@@ -44,18 +44,18 @@ class LightSensorCapabilityComponent extends Component {
 			);
 		}
 
-		const value = measurement.info.e.value;
-		const unit = measurement.info.e.unit;
+		const isRelayActive = measurement.info.state.value === 1;
+
+		const className = classNames(
+			'relay-status-wrap', {
+				'is-relay-active': isRelayActive,
+			}
+		);
 
 		return (
-			<GaugeComponent
-				title="Light intensity"
-				unit={unit}
-				height={200}
-				min={0}
-				max={100}
-				value={value}
-			/>
+			<div className={className}>
+				{isRelayActive ? 'Relay is activated' : 'Relay is not activated'}
+			</div>
 		);
 	}
 
@@ -65,4 +65,4 @@ export default connect(
 	state => ({
 	}), {
 	}
-)(LightSensorCapabilityComponent);
+)(RelayActuatorCapabilityComponent);

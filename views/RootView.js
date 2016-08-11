@@ -6,6 +6,8 @@ import themeConfig from '../config/theme-config';
 import cumulocityConfig from '../config/cumulocity-config';
 import platformApi from '../apis/platform-api';
 
+import DrawerMenuComponent from './components/DrawerMenuComponent';
+
 // require stylesheet
 require('../gfx/css/main.scss');
 
@@ -53,7 +55,7 @@ export default class RootView extends Component {
 			<MuiThemeProvider muiTheme={muiTheme}>
 				<div className="top-wrap">
 					{this.props.children}
-					{/* <DrawerMenuComponent /> */}
+					<DrawerMenuComponent />
 				</div>
 			</MuiThemeProvider>
 		);

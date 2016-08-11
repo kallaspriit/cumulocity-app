@@ -7,6 +7,7 @@ export default class MeasurementModel extends AbstractModel {
 		UNSUPPORTED: null,
 		LIGHT: null,
 		MOTION: null,
+		RELAY: null,
 	});
 
 	getSchema() {

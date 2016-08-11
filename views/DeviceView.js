@@ -13,12 +13,16 @@ import MenuItem from 'material-ui/MenuItem';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
+
+import * as capabilities from './components/capabilities';
+
+/*
 import HardwareCapabilityComponent from './components/capabilities/HardwareCapabilityComponent';
 import LightSensorCapabilityComponent from './components/capabilities/LightSensorCapabilityComponent';
 import MotionSensorCapabilityComponent from './components/capabilities/MotionSensorCapabilityComponent';
+*/
 
 import * as platformActions from '../actions/platform-actions';
-import CapabilityModel from '../models/CapabilityModel';
 
 class DeviceView extends Component {
 
@@ -151,6 +155,17 @@ class DeviceView extends Component {
 			measurements,
 		};
 
+		const capabilityComponent = this.getCapabilityComponentByType(capability.type);
+
+		if (capabilityComponent === null) {
+			console.warn(`capability type "${capability.type}" is not supported`);
+
+			return null;
+		}
+
+		return React.createElement(capabilityComponent, capabilityProps);
+
+		/*
 		switch (capability.type) {
 			case CapabilityModel.Type.HARDWARE:
 				return <HardwareCapabilityComponent {...capabilityProps} />;
@@ -166,6 +181,7 @@ class DeviceView extends Component {
 
 				return null;
 		}
+		*/
 	}
 
 	renderChildDeviceList(childDevices) {
@@ -242,6 +258,20 @@ class DeviceView extends Component {
 		}
 
 		return measurements;
+	}
+
+	getCapabilityComponentByType(type) {
+		const capabilityComponentNames = Object.keys(capabilities);
+
+		for (let i = 0; i < capabilityComponentNames.length; i++) {
+			const capabilityComponentName = capabilityComponentNames[i];
+
+			if (capabilities[capabilityComponentName].getType() === type) {
+				return capabilities[capabilityComponentName];
+			}
+		}
+
+		return null;
 	}
 
 	setupRealtimeUpdates(deviceId) {

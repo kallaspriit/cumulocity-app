@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
+import CapabilityModel from '../../../models/CapabilityModel';
 import MeasurementModel from '../../../models/MeasurementModel';
 
 class MotionSensorCapabilityComponent extends Component {
@@ -13,6 +14,10 @@ class MotionSensorCapabilityComponent extends Component {
 		deviceInfo: PropTypes.object.isRequired,
 		measurements: PropTypes.array.isRequired,
 	};
+
+	static getType() {
+		return CapabilityModel.Type.MOTION;
+	}
 
 	render() {
 		return (

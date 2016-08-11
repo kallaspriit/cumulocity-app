@@ -1,0 +1,11 @@
+.relay-actuator-capability-component {
+	.relay-status-wrap {
+		padding: 20px 0;
+		margin: -15px;
+		text-align: center;
+
+		&.is-relay-active {
+			background-color: #DFD;
+		}
+	}
+}

@@ -50,6 +50,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		this._measurementTypeMapping = {
 			c8y_LightMeasurement: MeasurementModel.Type.LIGHT,
 			com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: MeasurementModel.Type.MOTION,
+			com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: MeasurementModel.Type.RELAY,
 		};
 
 		this._realtimeId = 1;
