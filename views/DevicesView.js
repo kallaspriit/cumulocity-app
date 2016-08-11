@@ -6,6 +6,7 @@ import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import CompareArrows from 'material-ui/svg-icons/action/compare-arrows';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
@@ -18,6 +19,7 @@ class DevicesView extends Component {
 		devices: PropTypes.object.isRequired,
 
 		getDevices: PropTypes.func.isRequired,
+		logout: PropTypes.func.isRequired,
 	};
 
 	componentWillMount() {
@@ -62,11 +64,19 @@ class DevicesView extends Component {
 	renderHeaderMenus() {
 		return [
 			<MenuItem key={1} onTouchTap={() => this.handleRefresh()}>Refresh</MenuItem>,
+			<Divider key={2} />,
+			<MenuItem key={3} onTouchTap={() => this.handleLogout()}>Logout</MenuItem>,
 		];
 	}
 
 	handleRefresh() {
 		this.props.getDevices();
+	}
+
+	handleLogout() {
+		this.props.logout();
+
+		browserHistory.replace('/authentication');
 	}
 }
 
