@@ -7,6 +7,14 @@ export default class AbstractPlatform {
 		LIGHT: null,
 	});
 
+	constructor() {
+		this.store = null;
+	}
+
+	setStore(store) {
+		this.store = store;
+	}
+
 	authenticate(tenant, username, password) {}
 	getDevices() {}
 	getDevice(id) {}

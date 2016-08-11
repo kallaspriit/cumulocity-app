@@ -1,19 +1,36 @@
 import { handleActions } from 'redux-actions';
 import { getDefaultAsyncState } from '../libs/redux-promise-loading-middleware';
-import { AUTHENTICATE } from '../config/constants';
+import { SET_CREDENTIALS, AUTHENTICATE } from '../config/constants';
 
 const defaultState = {
 	...getDefaultAsyncState(),
 	info: {
-		tenant: 'null',
-		username: null,
-		password: null,
+		tenant: '',
+		username: '',
+		password: '',
+		isLoggedIn: false,
+		isInvalidCredentials: false,
 	},
 };
 
 export default handleActions({
-	[AUTHENTICATE]: (state, action) => ({
+	[SET_CREDENTIALS]: (state, action) => ({
 		...state,
 		...action.payload,
 	}),
+	[AUTHENTICATE]: (state, action) => {
+		const isSuccessful = action.payload.error === null;
+
+		console.log('AUTHENTICATE', isSuccessful, state, action);
+
+		return {
+			...state,
+			isLoading: action.payload.isLoading,
+			info: {
+				...state.info,
+				isLoggedIn: isSuccessful,
+				isInvalidCredentials: !isSuccessful,
+			},
+		};
+	},
 }, defaultState);

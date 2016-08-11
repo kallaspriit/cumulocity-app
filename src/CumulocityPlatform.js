@@ -6,23 +6,18 @@ import MeasurementModel from '../models/MeasurementModel';
 export default class CumulocityPlatform extends AbstractPlatform {
 
 	constructor({
-		host,
-		protocol,
-		tenant,
-		username,
-		password,
-	}) {
+		protocol = 'https',
+		host = 'cumulocity.com',
+	} = {}) {
 		super();
 
-		this.config = {
-			host,
+		this.network = {
 			protocol,
-			tenant,
-			username,
-			password,
+			host,
 		};
 
 		this.urls = {
+			authenticate: () => 'user/currentUser',
 			getDevices: () => 'inventory/managedObjects?fragmentType=c8y_IsDevice',
 			getDevice: (id) => `inventory/managedObjects/${id}`,
 			getRealtime: () => 'cep/realtime',
@@ -58,7 +53,15 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	authenticate(tenant, username, password) {
-		console.log('authenticate', tenant, username, password);
+		const url = this._buildUrl(
+			this.urls.authenticate()
+		);
+
+		return this._get(url).then((response) => {
+			console.log('authenticate', response);
+
+			return response.data;
+		});
 	}
 
 	getDevices() {
@@ -322,14 +325,18 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_buildUrl(query) {
-		return `${this.config.protocol}://${this.config.tenant}.${this.config.host}/${query}`;
+		const authenticationInfo = this.store.getState().authentication.info;
+
+		return `${this.network.protocol}://${authenticationInfo.tenant}.${this.network.host}/${query}`;
 	}
 
 	_getStandardRequestParameters() {
+		const authenticationInfo = this.store.getState().authentication.info;
+
 		return {
 			auth: {
-				username: this.config.username,
-				password: this.config.password,
+				username: authenticationInfo.username,
+				password: authenticationInfo.password,
 			},
 		};
 	}

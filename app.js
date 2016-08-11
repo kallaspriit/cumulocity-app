@@ -11,6 +11,7 @@ import DockMonitor from 'redux-devtools-dock-monitor';
 import thunkMiddleware from 'redux-thunk';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import promiseMiddleware from './libs/redux-promise-loading-middleware';
+import platformApi from './apis/platform-api';
 import getRoutes from './config/routes';
 import * as reducers from './reducers';
 
@@ -54,6 +55,9 @@ injectTapEventPlugin({
 		return diff < 2000;
 	},
 });
+
+// provide store to platform api
+platformApi.setStore(store);
 
 // render the application
 ReactDOM.render(

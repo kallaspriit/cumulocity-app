@@ -3,7 +3,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import CumulocityPlatform from '../src/CumulocityPlatform';
 import themeConfig from '../config/theme-config';
-import cumulocityConfig from '../config/cumulocity-config';
 import platformApi from '../apis/platform-api';
 
 import DrawerMenuComponent from './components/DrawerMenuComponent';
@@ -15,7 +14,7 @@ require('../gfx/css/main.scss');
 const muiTheme = getMuiTheme(themeConfig);
 
 // setup platform
-const cumulocityPlatform = new CumulocityPlatform(cumulocityConfig);
+const cumulocityPlatform = new CumulocityPlatform();
 
 platformApi.setProvider(cumulocityPlatform);
 

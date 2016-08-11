@@ -1,4 +1,5 @@
 // platform
+export const SET_CREDENTIALS = 'SET_CREDENTIALS';
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const GET_DEVICES = 'GET_DEVICES';
 export const GET_DEVICE = 'GET_DEVICE';

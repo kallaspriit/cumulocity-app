@@ -9,7 +9,7 @@ import PageNotFoundView from '../views/PageNotFoundView';
 
 function requireAuthentication(nextState, replace, store) {
 	const authenticationInfo = store.getState().authentication.info;
-	const isAuthenticationInfoAvailable = authenticationInfo.tenant !== null;
+	const isAuthenticationInfoAvailable = !authenticationInfo.password;
 	const isLoggedIn = authenticationInfo.isLoggedIn;
 
 	console.log('requireAuthentication', nextState, authenticationInfo);

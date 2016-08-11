@@ -83,7 +83,7 @@ class ErrorComponent extends Component {
 		} else if (this.state.trace.length > 0) {
 			return (
 				<List>
-					{this.state.trace.map((item) => this.renderTraceItem(item))}
+					{this.state.trace.map((item, index) => this.renderTraceItem(item, index))}
 				</List>
 			);
 		}

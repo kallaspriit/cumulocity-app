@@ -2,8 +2,23 @@ import AbstractPlatform from '../src/AbstractPlatform';
 
 export class PlatformApi extends AbstractPlatform {
 
+	constructor() {
+		super();
+
+		this.provider = null;
+	}
+
+	setStore(store) {
+		super.setStore(store);
+
+		if (this.provider !== null) {
+			this.provider.setStore(store);
+		}
+	}
+
 	setProvider(provider) {
 		this.provider = provider;
+		provider.setStore(this.config);
 
 		this._setupProxy();
 	}
@@ -27,7 +42,7 @@ export class PlatformApi extends AbstractPlatform {
 			return false;
 		}
 
-		if (methodName === 'constructor') {
+		if (['constructor', 'setStore'].indexOf(methodName) !== -1) {
 			return false;
 		}
 

@@ -1,5 +1,5 @@
 export default function promiseMiddleware() {
-	return (next) => (action) => {
+	return (dispatch) => (action) => {
 		const {
 			payload,
 			...rest,
@@ -7,7 +7,7 @@ export default function promiseMiddleware() {
 
 		// check whether the payload looks like a promise
 		if (payload && typeof payload.then === 'function') {
-			next({
+			dispatch({
 				...rest,
 				payload: {
 					isLoading: true,
@@ -17,7 +17,7 @@ export default function promiseMiddleware() {
 
 			payload.then(
 				(info) => {
-					next({
+					dispatch({
 						...rest,
 						payload: {
 							isLoading: false,
@@ -27,7 +27,7 @@ export default function promiseMiddleware() {
 					});
 				},
 				(error) => {
-					next({
+					dispatch({
 						...rest,
 						payload: {
 							isLoading: false,
@@ -39,7 +39,7 @@ export default function promiseMiddleware() {
 			);
 		} else {
 			// not a promise, just pass-through
-			next(action);
+			dispatch(action);
 		}
 	};
 }

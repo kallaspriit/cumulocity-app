@@ -8,7 +8,7 @@ BODY {
 	overflow-y: auto;
 }
 .main-contents {
-	padding-top: 70px;
+	padding-top: 64px;
 }
 
 .capability-component {
@@ -20,10 +20,12 @@ BODY {
 }
 
 @import "views/device-view";
+@import "views/authentication-view";
 
 @import "components/header-component";
 @import "components/loader-component";
 @import "components/error-component";
+@import "components/error-message-component";
 
 @import "components/capabilities/hardware-capability-component";
 @import "components/capabilities/light-sensor-capability-component";
