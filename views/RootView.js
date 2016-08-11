@@ -75,8 +75,12 @@ export default class RootView extends Component {
 					newHistory.pop();
 					break;
 
+				case 'REPLACE':
+					newHistory.pop();
+					break;
+
 				default:
-					throw new Error(`Unexpected location action ${nextProps.location.action}`);
+					console.warn(`unexpected location action ${nextProps.location.action}`);
 			}
 
 			this.setState({

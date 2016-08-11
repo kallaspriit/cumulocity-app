@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 import Card from 'material-ui/Card/Card';
 import CardTitle from 'material-ui/Card/CardTitle';
@@ -11,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
 import HeaderComponent from './components/HeaderComponent';
-import ErrorMessageComponent from './components/ErrorMessageComponent';
+import MessageComponent from './components/MessageComponent';
 
 import * as platformActions from '../actions/platform-actions';
 
@@ -32,6 +33,12 @@ class AuthenticationView extends Component {
 			username: props.authentication.info.username,
 			password: props.authentication.info.password,
 		};
+
+		this.isRedirecting = false;
+	}
+
+	componentDidUpdate() {
+		this.checkForAuthenticationSuccessful();
 	}
 
 	render() {
@@ -39,8 +46,9 @@ class AuthenticationView extends Component {
 			authentication,
 		} = this.props;
 
-
 		const isLoading = authentication.isLoading;
+		const isLoggedIn = authentication.info.isLoggedIn;
+		const isFormDisabled = isLoading || isLoggedIn;
 		const loaderStyle = {
 			visibility: isLoading ? 'visible' : 'hidden',
 		};
@@ -64,15 +72,12 @@ class AuthenticationView extends Component {
 					</CardMedia>
 					<LinearProgress mode="indeterminate" style={loaderStyle} />
 					<CardText>
-						<ErrorMessageComponent
-							message="Invalid credentials, please try again"
-							isVisible={authentication.info.isInvalidCredentials}
-						/>
+						{this.renderMessage()}
 						<TextField
 							id="tenant"
 							hintText="Tenant"
 							fullWidth
-							disabled={isLoading}
+							disabled={isFormDisabled}
 							value={this.state.tenant}
 							onChange={(event) => this.handleTextFieldChange(event)}
 						/>
@@ -80,7 +85,7 @@ class AuthenticationView extends Component {
 							id="username"
 							hintText="Username"
 							fullWidth
-							disabled={isLoading}
+							disabled={isFormDisabled}
 							value={this.state.username}
 							onChange={(event) => this.handleTextFieldChange(event)}
 						/>
@@ -89,7 +94,7 @@ class AuthenticationView extends Component {
 							hintText="Password"
 							type="password"
 							fullWidth
-							disabled={isLoading}
+							disabled={isFormDisabled}
 							value={this.state.password}
 							onChange={(event) => this.handleTextFieldChange(event)}
 						/>
@@ -98,13 +103,37 @@ class AuthenticationView extends Component {
 							className="login-button"
 							primary
 							fullWidth
-							disabled={isLoading}
+							disabled={isFormDisabled}
 							onTouchTap={() => this.handleLogin()}
 						/>
 					</CardText>
 				</Card>
 			</div>
 		);
+	}
+
+	renderMessage() {
+		const {
+			authentication,
+		} = this.props;
+
+		const messageProps = {
+			type: MessageComponent.Type.ERROR,
+			message: '',
+			isVisible: false,
+		};
+
+		if (authentication.info.isLoggedIn) {
+			messageProps.type = MessageComponent.Type.SUCCESS;
+			messageProps.message = 'Authentication successful, redirecting';
+			messageProps.isVisible = true;
+		} else if (authentication.info.isInvalidCredentials) {
+			messageProps.type = MessageComponent.Type.ERROR;
+			messageProps.message = 'Invalid credentials, please try again';
+			messageProps.isVisible = true;
+		}
+
+		return <MessageComponent {...messageProps} />;
 	}
 
 	renderHeaderMenus() {
@@ -131,6 +160,16 @@ class AuthenticationView extends Component {
 		this.setState({
 			[event.target.id]: event.target.value,
 		});
+	}
+
+	checkForAuthenticationSuccessful() {
+		if (this.props.authentication.info.isLoggedIn && !this.isRedirecting) {
+			this.isRedirecting = true;
+
+			setTimeout(() => {
+				browserHistory.push('/devices');
+			}, 2000);
+		}
 	}
 }
 

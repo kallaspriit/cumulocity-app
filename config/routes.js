@@ -9,18 +9,19 @@ import PageNotFoundView from '../views/PageNotFoundView';
 
 function requireAuthentication(nextState, replace, store) {
 	const authenticationInfo = store.getState().authentication.info;
-	const isAuthenticationInfoAvailable = !authenticationInfo.password;
 	const isLoggedIn = authenticationInfo.isLoggedIn;
 
-	console.log('requireAuthentication', nextState, authenticationInfo);
+	if (!isLoggedIn) {
+		console.log('user is not logged in, redirecting to authentication');
 
-	if (!isAuthenticationInfoAvailable || !isLoggedIn) {
 		replace({
 			pathname: '/authentication',
 			state: {
 				nextPathname: nextState.location.pathname,
 			},
 		});
+	} else {
+		console.log('no intervention needed');
 	}
 }
 

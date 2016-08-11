@@ -19,17 +19,16 @@ export default handleActions({
 		...action.payload,
 	}),
 	[AUTHENTICATE]: (state, action) => {
-		const isSuccessful = action.payload.error === null;
-
-		console.log('AUTHENTICATE', isSuccessful, state, action);
+		const isLoggedIn = !action.payload.isLoading && action.payload.error === null;
+		const isInvalidCredentials = action.payload.error !== null;
 
 		return {
 			...state,
 			isLoading: action.payload.isLoading,
 			info: {
 				...state.info,
-				isLoggedIn: isSuccessful,
-				isInvalidCredentials: !isSuccessful,
+				isLoggedIn,
+				isInvalidCredentials,
 			},
 		};
 	},
