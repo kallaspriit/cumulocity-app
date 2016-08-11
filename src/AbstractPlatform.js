@@ -11,6 +11,7 @@ export default class AbstractPlatform {
 	getDevice(id) {}
 	getRealtimeUpdates(channel, callback) {}
 	getDeviceLatestMeasurements(deviceId) {}
+	sendDeviceOperation(deviceId, description, payload) {}
 
 	_get(url) {
 		return this._request({
@@ -19,10 +20,11 @@ export default class AbstractPlatform {
 		});
 	}
 
-	_post(url, data) {
+	_post(url, data, headers = {}) {
 		return this._request({
 			url,
 			data,
+			headers,
 			method: 'post',
 		});
 	}

@@ -23,21 +23,22 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		};
 
 		this.urls = {
-			getDevices: () => '/inventory/managedObjects?fragmentType=c8y_IsDevice',
-			getDevice: (id) => `/inventory/managedObjects/${id}`,
+			getDevices: () => 'inventory/managedObjects?fragmentType=c8y_IsDevice',
+			getDevice: (id) => `inventory/managedObjects/${id}`,
 			getRealtime: () => 'cep/realtime',
 			getDeviceLatestMeasurements: (deviceId) => {
 				const dateTo = this._formatDate(
 					this._getTomorrowsDate()
 				);
 
-				return `/measurement/measurements
+				return `measurement/measurements
 					?dateFrom=1970-01-01
 					&dateTo=${dateTo}
 					&pageSize=1
 					&revert=true
 					&source=${deviceId}`;
 			},
+			sendDeviceOperation: () => 'devicecontrol/operations',
 		};
 
 		this._capabilityTypeMapping = {
@@ -111,6 +112,23 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				[deviceId]: measurements,
 			};
 		});
+	}
+
+	sendDeviceOperation(deviceId, description, payload) {
+		const url = this._buildUrl(
+			this.urls.sendDeviceOperation()
+		);
+		const data = {
+			deviceId,
+			description,
+			...payload,
+		};
+
+		const headers = {
+			'Content-Type': 'application/vnd.com.nsn.cumulocity.operation+json',
+		};
+
+		return this._post(url, data, headers).then((response) => response.data.c8y_Relay);
 	}
 
 	// rest is private

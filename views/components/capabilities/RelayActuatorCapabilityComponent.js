@@ -8,12 +8,16 @@ import Toggle from 'material-ui/Toggle';
 import CapabilityModel from '../../../models/CapabilityModel';
 import MeasurementModel from '../../../models/MeasurementModel';
 
+import * as platformActions from '../../../actions/platform-actions';
+
 class RelayActuatorCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
 		deviceInfo: PropTypes.object.isRequired,
 		measurements: PropTypes.array.isRequired,
+
+		sendDeviceOperation: PropTypes.func.isRequired,
 	};
 
 	static getType() {
@@ -60,7 +64,14 @@ class RelayActuatorCapabilityComponent extends Component {
 	handleToggle() {
 		const isActive = this.getIsActive();
 
-		console.log('handleToggle', isActive);
+		this.props.sendDeviceOperation(
+			this.props.deviceInfo.id,
+			isActive ? 'Open relay' : 'Close relay', {
+				c8y_Relay: {
+					relayState: isActive ? 'OPEN' : 'CLOSED',
+				},
+			},
+		);
 	}
 
 	getMeasurement() {
@@ -88,5 +99,6 @@ class RelayActuatorCapabilityComponent extends Component {
 export default connect(
 	state => ({
 	}), {
+		...platformActions,
 	}
 )(RelayActuatorCapabilityComponent);
