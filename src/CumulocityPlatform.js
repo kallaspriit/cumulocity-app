@@ -57,6 +57,10 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		this._realtimeId = 1;
 	}
 
+	authenticate(tenant, username, password) {
+		console.log('authenticate', tenant, username, password);
+	}
+
 	getDevices() {
 		const url = this._buildUrl(
 			this.urls.getDevices()

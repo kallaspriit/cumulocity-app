@@ -2,15 +2,38 @@ import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
 import RootView from '../views/RootView';
+import AuthenticationView from '../views/AuthenticationView';
 import DevicesView from '../views/DevicesView';
 import DeviceView from '../views/DeviceView';
 import PageNotFoundView from '../views/PageNotFoundView';
 
-export default [
-	<Route path="/" component={RootView}>
-		<Route path="devices" component={DevicesView} />
-		<Route path="devices/:deviceId" component={DeviceView} />
-		<Route path="*" component={PageNotFoundView} />
-		<IndexRedirect to="devices" />
-	</Route>,
-];
+function requireAuthentication(nextState, replace, store) {
+	const authenticationInfo = store.getState().authentication.info;
+	const isAuthenticationInfoAvailable = authenticationInfo.tenant !== null;
+	const isLoggedIn = authenticationInfo.isLoggedIn;
+
+	console.log('requireAuthentication', nextState, authenticationInfo);
+
+	if (!isAuthenticationInfoAvailable || !isLoggedIn) {
+		replace({
+			pathname: '/authentication',
+			state: {
+				nextPathname: nextState.location.pathname,
+			},
+		});
+	}
+}
+
+export default function(store) {
+	const handleRequireAuthentication = (nextState, replace) => requireAuthentication(nextState, replace, store);
+
+	return [
+		<Route path="/" component={RootView}>
+			<Route path="authentication" component={AuthenticationView} />
+			<Route path="devices" component={DevicesView} onEnter={handleRequireAuthentication} />
+			<Route path="devices/:deviceId" component={DeviceView} onEnter={handleRequireAuthentication} />
+			<Route path="*" component={PageNotFoundView} />
+			<IndexRedirect to="devices" />
+		</Route>,
+	];
+}

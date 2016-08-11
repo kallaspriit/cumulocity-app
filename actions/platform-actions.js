@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 import platformApi from '../apis/platform-api';
 import {
+	AUTHENTICATE,
 	GET_DEVICES,
 	GET_DEVICE,
 	GET_REALTIME_UPDATES,
@@ -10,6 +11,11 @@ import {
 } from '../config/constants';
 
 const realtimeChannelToCancelMap = {};
+
+export const authenticate = createAction(
+	AUTHENTICATE,
+	platformApi.authenticate
+);
 
 export const getDevices = createAction(
 	GET_DEVICES,

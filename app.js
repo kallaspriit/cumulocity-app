@@ -11,7 +11,7 @@ import DockMonitor from 'redux-devtools-dock-monitor';
 import thunkMiddleware from 'redux-thunk';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import promiseMiddleware from './libs/redux-promise-loading-middleware';
-import routes from './config/routes';
+import getRoutes from './config/routes';
 import * as reducers from './reducers';
 
 // configure combined reduxer which includes the router
@@ -59,7 +59,7 @@ injectTapEventPlugin({
 ReactDOM.render(
 	<Provider store={store}>
 		<div>
-			<Router history={history} routes={routes} />
+			<Router history={history} routes={getRoutes(store)} />
 			<DevTools />
 		</div>
 	</Provider>,

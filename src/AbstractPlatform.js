@@ -7,6 +7,7 @@ export default class AbstractPlatform {
 		LIGHT: null,
 	});
 
+	authenticate(tenant, username, password) {}
 	getDevices() {}
 	getDevice(id) {}
 	getRealtimeUpdates(channel, callback) {}
