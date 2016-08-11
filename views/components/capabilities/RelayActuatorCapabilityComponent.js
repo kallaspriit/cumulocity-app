@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import CircularProgress from 'material-ui/CircularProgress';
+import Toggle from 'material-ui/Toggle';
 
 import CapabilityModel from '../../../models/CapabilityModel';
 import MeasurementModel from '../../../models/MeasurementModel';
@@ -28,15 +29,9 @@ class RelayActuatorCapabilityComponent extends Component {
 	}
 
 	renderContents() {
-		const {
-			measurements,
-		} = this.props;
+		const isDataAvailable = this.getMeasurement() !== null;
 
-		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.RELAY
-		) || null;
-
-		if (!measurement) {
+		if (!isDataAvailable) {
 			return (
 				<div className="loader-wrap">
 					<CircularProgress />
@@ -44,8 +39,7 @@ class RelayActuatorCapabilityComponent extends Component {
 			);
 		}
 
-		const isRelayActive = measurement.info.state.value === 1;
-
+		const isRelayActive = this.getIsActive();
 		const className = classNames(
 			'relay-status-wrap', {
 				'is-relay-active': isRelayActive,
@@ -54,9 +48,39 @@ class RelayActuatorCapabilityComponent extends Component {
 
 		return (
 			<div className={className}>
-				{isRelayActive ? 'Relay is activated' : 'Relay is not activated'}
+				<Toggle
+					label={isRelayActive ? 'Activated' : 'Not activated'}
+					toggled={isRelayActive}
+					onToggle={() => this.handleToggle()}
+				/>
 			</div>
 		);
+	}
+
+	handleToggle() {
+		const isActive = this.getIsActive();
+
+		console.log('handleToggle', isActive);
+	}
+
+	getMeasurement() {
+		const {
+			measurements,
+		} = this.props;
+
+		return measurements.find(
+			(item) => item.type === MeasurementModel.Type.RELAY
+		) || null;
+	}
+
+	getIsActive() {
+		const measurement = this.getMeasurement();
+
+		if (!measurement) {
+			return false;
+		}
+
+		return measurement.info.state.value === 1;
 	}
 
 }
