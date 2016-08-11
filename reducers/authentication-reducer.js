@@ -2,12 +2,13 @@ import { handleActions } from 'redux-actions';
 import store from 'store';
 import keyMirror from 'keymirror';
 import { getDefaultAsyncState } from '../libs/redux-promise-loading-middleware';
-import { SET_CREDENTIALS, AUTHENTICATE } from '../config/constants';
+import { SET_CREDENTIALS, AUTHENTICATE, LOGOUT } from '../config/constants';
 
 const StoreKey = keyMirror({
 	AUTHENTICATION_TENANT: null,
 	AUTHENTICATION_USERNAME: null,
 	AUTHENTICATION_PASSWORD: null,
+	AUTHENTICATION_REMEMBERED: null,
 });
 
 const defaultState = {
@@ -16,6 +17,7 @@ const defaultState = {
 		tenant: store.get(StoreKey.AUTHENTICATION_TENANT, ''),
 		username: store.get(StoreKey.AUTHENTICATION_USERNAME, ''),
 		password: store.get(StoreKey.AUTHENTICATION_PASSWORD, ''),
+		isRemembered: store.get(StoreKey.AUTHENTICATION_REMEMBERED, false),
 		isLoggedIn: false,
 		isInvalidCredentials: false,
 	},
@@ -34,6 +36,7 @@ export default handleActions({
 			store.set(StoreKey.AUTHENTICATION_TENANT, state.info.tenant);
 			store.set(StoreKey.AUTHENTICATION_USERNAME, state.info.username);
 			store.set(StoreKey.AUTHENTICATION_PASSWORD, state.info.password);
+			store.set(StoreKey.AUTHENTICATION_REMEMBERED, true);
 		}
 
 		return {
@@ -43,6 +46,24 @@ export default handleActions({
 				...state.info,
 				isLoggedIn,
 				isInvalidCredentials,
+			},
+		};
+	},
+	[LOGOUT]: (state, action) => {
+		store.remove(StoreKey.AUTHENTICATION_TENANT);
+		store.remove(StoreKey.AUTHENTICATION_USERNAME);
+		store.remove(StoreKey.AUTHENTICATION_PASSWORD);
+		store.remove(StoreKey.AUTHENTICATION_REMEMBERED);
+
+		return {
+			...state,
+			info: {
+				tenant: '',
+				username: '',
+				password: '',
+				isRemembered: false,
+				isLoggedIn: false,
+				isInvalidCredentials: false,
 			},
 		};
 	},

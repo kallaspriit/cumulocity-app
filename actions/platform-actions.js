@@ -3,6 +3,7 @@ import platformApi from '../apis/platform-api';
 import {
 	SET_CREDENTIALS,
 	AUTHENTICATE,
+	LOGOUT,
 	GET_DEVICES,
 	GET_DEVICE,
 	GET_REALTIME_UPDATES,
@@ -41,6 +42,10 @@ export const setCredentials = createAction(
 export const authenticate = createAction(
 	AUTHENTICATE,
 	platformApi.authenticate
+);
+
+export const logout = createAction(
+	LOGOUT
 );
 
 export const getRealtimeUpdates = (channel) => (dispatch) => {

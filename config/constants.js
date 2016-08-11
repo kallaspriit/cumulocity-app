@@ -1,6 +1,7 @@
 // platform
 export const SET_CREDENTIALS = 'SET_CREDENTIALS';
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
 export const GET_DEVICES = 'GET_DEVICES';
 export const GET_DEVICE = 'GET_DEVICE';
 export const GET_DEVICE_LATEST_MEASUREMENTS = 'GET_DEVICE_LATEST_MEASUREMENTS';

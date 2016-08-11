@@ -7,7 +7,7 @@ import CardTitle from 'material-ui/Card/CardTitle';
 import CardMedia from 'material-ui/Card/CardMedia';
 import CardText from 'material-ui/Card/CardText';
 import TextField from 'material-ui/TextField';
-import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 
@@ -23,6 +23,7 @@ class AuthenticationView extends Component {
 
 		setCredentials: PropTypes.func.isRequired,
 		authenticate: PropTypes.func.isRequired,
+		logout: PropTypes.func.isRequired,
 	};
 
 	constructor(props) {
@@ -50,12 +51,12 @@ class AuthenticationView extends Component {
 		const isLoggedIn = authentication.info.isLoggedIn;
 		const isFormDisabled = isLoading || isLoggedIn;
 		const loaderStyle = {
-			visibility: isLoading ? 'visible' : 'hidden',
+			visibility: isLoading || isLoggedIn ? 'visible' : 'hidden',
 		};
 
 		return (
 			<div className="authentication-view">
-				<HeaderComponent title="Authentication" menus={this.renderHeaderMenus()} />
+				<HeaderComponent title="Authentication" />
 				<Card className="main-contents">
 					<CardMedia
 						overlay={
@@ -106,6 +107,7 @@ class AuthenticationView extends Component {
 							disabled={isFormDisabled}
 							onTouchTap={() => this.handleLogin()}
 						/>
+						{this.renderForgetButton()}
 					</CardText>
 				</Card>
 			</div>
@@ -136,10 +138,18 @@ class AuthenticationView extends Component {
 		return <MessageComponent {...messageProps} />;
 	}
 
-	renderHeaderMenus() {
-		return [
-			<MenuItem key={1} onTouchTap={() => this.handleLogout()}>Logout</MenuItem>,
-		];
+	renderForgetButton() {
+		if (!this.props.authentication.info.isRemembered) {
+			return null;
+		}
+
+		return (
+			<FlatButton
+				label="Forget user"
+				className="forget-button"
+				onTouchTap={() => this.handleLogout()}
+			/>
+		);
 	}
 
 	handleLogin() {
@@ -153,7 +163,13 @@ class AuthenticationView extends Component {
 	}
 
 	handleLogout() {
-		console.log('logout');
+		this.props.logout();
+
+		this.setState({
+			tenant: '',
+			username: '',
+			password: '',
+		});
 	}
 
 	handleTextFieldChange(event) {
@@ -168,7 +184,7 @@ class AuthenticationView extends Component {
 
 			setTimeout(() => {
 				browserHistory.replace('/devices');
-			}, 2000);
+			}, 1000);
 		}
 	}
 }
