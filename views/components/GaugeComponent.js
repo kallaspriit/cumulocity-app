@@ -36,7 +36,7 @@ export default class GaugeComponent extends Component {
 	}) {
 		const chart = this.chart.getChart();
 
-		chart.series[0].points[0].update(value);
+		chart.series[0].points[0].update(this.formatValue(value));
 	}
 
 	shouldComponentUpdate() {
@@ -114,7 +114,7 @@ export default class GaugeComponent extends Component {
 
 			series: [{
 				name: title,
-				data: [value],
+				data: [this.formatValue(value)],
 				dataLabels: {
 					format: `<div class="gauge-value-wrap">
 						<span class="gauge-value-number">{y}</span><br/>
@@ -133,6 +133,10 @@ export default class GaugeComponent extends Component {
 				config={config}
 			/>
 		);
+	}
+
+	formatValue(value) {
+		return Math.round(value * 10) / 10;
 	}
 
 }
