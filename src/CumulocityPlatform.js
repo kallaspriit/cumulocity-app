@@ -289,8 +289,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			model: info.c8y_Hardware
 				? info.c8y_Hardware.model
 				: null,
-			isOnline: info.c8y_Connection && info.c8y_Connection.status
-				? info.c8y_Connection.status === 'CONNECTED'
+			isOnline: info.c8y_Availability && info.c8y_Availability.status
+				? info.c8y_Availability.status === 'AVAILABLE'
 				: false,
 			childDevices: info.childDevices ? info.childDevices.references.map(this._mapChildDevice.bind(this)) : [],
 			supportedOperations: info.c8y_SupportedOperations ? info.c8y_SupportedOperations : [],

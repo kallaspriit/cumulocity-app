@@ -12,16 +12,12 @@ function requireAuthentication(nextState, replace, store) {
 	const isLoggedIn = authenticationInfo.isLoggedIn;
 
 	if (!isLoggedIn) {
-		console.log('user is not logged in, redirecting to authentication');
-
 		replace({
 			pathname: '/authentication',
 			state: {
 				nextPathname: nextState.location.pathname,
 			},
 		});
-	} else {
-		console.log('no intervention needed');
 	}
 }
 

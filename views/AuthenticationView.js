@@ -127,7 +127,7 @@ class AuthenticationView extends Component {
 
 		if (authentication.info.isLoggedIn) {
 			messageProps.type = MessageComponent.Type.SUCCESS;
-			messageProps.message = 'Authentication successful, redirecting';
+			messageProps.message = 'Authentication successful';
 			messageProps.isVisible = true;
 		} else if (authentication.info.isInvalidCredentials) {
 			messageProps.type = MessageComponent.Type.ERROR;

@@ -1,5 +1,26 @@
+$emulation-max-width: 500px;
+$emulation-max-height: 800px;
+
 BODY {
 	margin: 0;
+	display: flex;
+	flex-direction: column;
+	// justify-content: center;
+	min-height: 100vh;
+}
+
+#root {
+	width: 100%;
+	max-width: $emulation-max-width;
+	max-height: $emulation-max-height;
+	overflow: hidden;
+	overflow-y: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.header-component {
+	max-width: $emulation-max-width;
 }
 
 .top-wrap {
