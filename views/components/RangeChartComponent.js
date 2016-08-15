@@ -10,10 +10,14 @@ export default class RangeChartComponent extends Component {
 		title: PropTypes.string.isRequired,
 		data: PropTypes.array.isRequired,
 		height: PropTypes.number,
+		min: PropTypes.number,
+		max: PropTypes.number,
 	};
 
 	static defaultProps = {
 		height: 400,
+		min: null,
+		max: null,
 		unit: '',
 	};
 
@@ -39,6 +43,8 @@ export default class RangeChartComponent extends Component {
 		const {
 			title,
 			height,
+			min,
+			max,
 			data,
 		} = this.props;
 
@@ -62,6 +68,8 @@ export default class RangeChartComponent extends Component {
 				title: {
 					text: null,
 				},
+				min,
+				max,
 			},
 
 			legend: {

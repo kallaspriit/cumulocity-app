@@ -77,6 +77,8 @@ class LightSensorCapabilityComponent extends Component {
 			<RangeChartComponent
 				title="Intensity history"
 				height={200}
+				min={0}
+				max={100}
 				data={lightMeasurements}
 			/>
 		);

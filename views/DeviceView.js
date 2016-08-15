@@ -189,8 +189,6 @@ class DeviceView extends Component {
 	}
 
 	loadDeviceInfo(deviceId) {
-		console.log(`loading device info for ${deviceId}`);
-
 		this.props.getDevice(deviceId);
 		this.props.getDeviceLatestMeasurements(deviceId);
 		this.props.getMeasurementSeries(
