@@ -39,6 +39,7 @@ class DeviceView extends Component {
 		super(props);
 
 		this.isInitialDataLoaded = false;
+		this.loadedDeviceId = null;
 	}
 
 	componentWillMount() {
@@ -49,7 +50,7 @@ class DeviceView extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.params.deviceId !== this.props.params.deviceId) {
-			this.loadDeviceInfo(this.props.params.deviceId);
+			this.loadDeviceInfo(nextProps.params.deviceId);
 		}
 	}
 
@@ -188,7 +189,9 @@ class DeviceView extends Component {
 	}
 
 	loadDeviceInfo(deviceId) {
-		this.props.getDevice(this.props.params.deviceId);
+		console.log(`loading device info for ${deviceId}`);
+
+		this.props.getDevice(deviceId);
 		this.props.getDeviceLatestMeasurements(deviceId);
 		this.props.getMeasurementSeries(
 			deviceId,
@@ -199,8 +202,13 @@ class DeviceView extends Component {
 			true
 		);
 
-		this.stopRealtimeUpdates(deviceId);
+		if (this.loadedDeviceId !== null) {
+			this.stopRealtimeUpdates(this.loadedDeviceId);
+		}
+
 		this.setupRealtimeUpdates(deviceId);
+
+		this.loadedDeviceId = deviceId;
 	}
 
 	getBackgroundImage(info) {
