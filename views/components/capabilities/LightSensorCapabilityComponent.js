@@ -6,6 +6,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import CapabilityModel from '../../../models/CapabilityModel';
 import MeasurementModel from '../../../models/MeasurementModel';
 import GaugeComponent from '../GaugeComponent';
+import RangeChartComponent from '../RangeChartComponent';
 
 class LightSensorCapabilityComponent extends Component {
 
@@ -13,6 +14,7 @@ class LightSensorCapabilityComponent extends Component {
 		capability: PropTypes.object.isRequired,
 		deviceInfo: PropTypes.object.isRequired,
 		measurements: PropTypes.array.isRequired,
+		measurementSeries: PropTypes.object.isRequired,
 	};
 
 	static getType() {
@@ -22,12 +24,13 @@ class LightSensorCapabilityComponent extends Component {
 	render() {
 		return (
 			<div className="capability-component light-sensor-capability-component">
-				{this.renderContents()}
+				{this.renderGauge()}
+				{this.renderRangeChart()}
 			</div>
 		);
 	}
 
-	renderContents() {
+	renderGauge() {
 		const {
 			measurements,
 		} = this.props;
@@ -49,12 +52,32 @@ class LightSensorCapabilityComponent extends Component {
 
 		return (
 			<GaugeComponent
-				title="Light intensity"
+				title="Current intensity"
 				unit={unit}
 				height={200}
 				min={0}
 				max={100}
 				value={value}
+			/>
+		);
+	}
+
+	renderRangeChart() {
+		const {
+			measurementSeries,
+		} = this.props;
+
+		const lightMeasurements = measurementSeries[MeasurementModel.Type.LIGHT];
+
+		if (!lightMeasurements) {
+			return null;
+		}
+
+		return (
+			<RangeChartComponent
+				title="Intensity history"
+				height={200}
+				data={lightMeasurements}
 			/>
 		);
 	}

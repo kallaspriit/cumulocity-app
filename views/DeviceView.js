@@ -11,17 +11,12 @@ import CardMedia from 'material-ui/Card/CardMedia';
 import CardTitle from 'material-ui/Card/CardTitle';
 import MenuItem from 'material-ui/MenuItem';
 
+import AbstractPlatform from '../src/AbstractPlatform';
+
 import HeaderComponent from './components/HeaderComponent';
 import AsyncComponent from './components/AsyncComponent';
 
 import * as capabilities from './components/capabilities';
-
-/*
-import HardwareCapabilityComponent from './components/capabilities/HardwareCapabilityComponent';
-import LightSensorCapabilityComponent from './components/capabilities/LightSensorCapabilityComponent';
-import MotionSensorCapabilityComponent from './components/capabilities/MotionSensorCapabilityComponent';
-*/
-
 import * as platformActions from '../actions/platform-actions';
 
 class DeviceView extends Component {
@@ -35,6 +30,7 @@ class DeviceView extends Component {
 
 		getDevice: PropTypes.func.isRequired,
 		getDeviceLatestMeasurements: PropTypes.func.isRequired,
+		getMeasurementSeries: PropTypes.func.isRequired,
 		getRealtimeUpdates: PropTypes.func.isRequired,
 		stopRealtimeUpdates: PropTypes.func.isRequired,
 	};
@@ -47,24 +43,13 @@ class DeviceView extends Component {
 
 	componentWillMount() {
 		this.props.getDevice(this.props.params.deviceId);
+
+		this.loadDeviceInfo(this.props.params.deviceId);
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.params.deviceId !== this.props.params.deviceId) {
-			this.stopRealtimeUpdates(this.props.params.deviceId);
-			this.setupRealtimeUpdates(nextProps.params.deviceId);
-			this.props.getDeviceLatestMeasurements(nextProps.params.deviceId);
-
-			this.props.getDevice(nextProps.params.deviceId);
-		}
-	}
-
-	componentDidUpdate() {
-		if (this.props.device.info !== null && !this.isInitialDataLoaded) {
-			this.isInitialDataLoaded = true;
-
-			this.setupRealtimeUpdates(this.props.params.deviceId);
-			this.props.getDeviceLatestMeasurements(this.props.params.deviceId);
+			this.loadDeviceInfo(this.props.params.deviceId);
 		}
 	}
 
@@ -80,8 +65,6 @@ class DeviceView extends Component {
 		const title = !device.info || device.isLoading
 			? 'Devices » loading...'
 			: `Devices » ${device.info.name}`;
-
-		console.log('measurementSeries', this.props.measurementSeries);
 
 		return (
 			<div className="device-view">
@@ -145,6 +128,7 @@ class DeviceView extends Component {
 	renderCapabilityWidget(deviceInfo, capability) {
 		const channel = this.getDeviceMeasurementsChannelName(this.props.params.deviceId);
 		const realtimeUpdates = this.props.realtime[channel] || [];
+		const measurementSeries = this.props.measurementSeries.info[this.props.params.deviceId] || {};
 		let measurements = this.getRealtimeUpdateMeasurements(realtimeUpdates);
 
 		// use latest measurements if realtime info is not available
@@ -156,6 +140,7 @@ class DeviceView extends Component {
 			capability,
 			deviceInfo,
 			measurements,
+			measurementSeries,
 		};
 
 		const capabilityComponent = this.getCapabilityComponentByType(capability.type);
@@ -200,6 +185,22 @@ class DeviceView extends Component {
 
 	handleRefresh() {
 		this.props.getDevice(this.props.params.deviceId);
+	}
+
+	loadDeviceInfo(deviceId) {
+		this.props.getDevice(this.props.params.deviceId);
+		this.props.getDeviceLatestMeasurements(deviceId);
+		this.props.getMeasurementSeries(
+			deviceId,
+			new Date(Date.now() - (60 * 60 * 1000)),
+			new Date(),
+			AbstractPlatform.AggregationType.MINUTELY,
+			60,
+			true
+		);
+
+		this.stopRealtimeUpdates(deviceId);
+		this.setupRealtimeUpdates(deviceId);
 	}
 
 	getBackgroundImage(info) {

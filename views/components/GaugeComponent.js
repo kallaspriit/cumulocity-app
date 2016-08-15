@@ -56,11 +56,11 @@ export default class GaugeComponent extends Component {
 		const config = {
 			chart: {
 				type: 'solidgauge',
-				height,
 				backgroundColor: 'rgba(255, 255, 255, 0)',
+				height,
 			},
 
-			title: 'Light intensity',
+			title,
 
 			pane: {
 				center: ['50%', '75%'],

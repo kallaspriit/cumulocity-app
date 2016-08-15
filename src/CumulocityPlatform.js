@@ -74,9 +74,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			this.urls.authenticate()
 		);
 
-		return this._get(url).then((response) => {
-			return response.data;
-		});
+		return this._get(url).then((response) => response.data);
 	}
 
 	getDevices() {
@@ -146,7 +144,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 				return {
 					...result,
-					[this._mapMeasurementType(item.type)]: {},
+					[this._mapMeasurementType(item.type)]: [],
 				};
 			}, {});
 
@@ -160,7 +158,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 						continue;
 					}
 
-					measurements[type][timestamp] = value[i];
+					measurements[type].push([new Date(timestamp), value[i].min, value[i].max]);
 				}
 			});
 
@@ -176,10 +174,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			'2664191',
 			new Date(Date.now() - (24 * 60 * 60 * 1000)),
 			new Date(),
-			CumulocityPlatform.AggregationType.NONE,
-			1440,
-			true,
-			'c8y_LightMeasurement'
+			AbstractPlatform.AggregationType.NONE,
+			24 * 60,
+			true
 		).then((response) => {
 			console.log('test', response);
 		});
