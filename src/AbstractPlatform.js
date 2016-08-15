@@ -3,8 +3,11 @@ import keyMirror from 'keymirror';
 
 export default class AbstractPlatform {
 
-	static Measurement = keyMirror({
-		LIGHT: null,
+	static AggregationType = keyMirror({
+		DAILY: null,
+		HOURLY: null,
+		MINUTELY: null,
+		NONE: null,
 	});
 
 	constructor() {
@@ -18,9 +21,17 @@ export default class AbstractPlatform {
 	authenticate(tenant, username, password) {}
 	getDevices() {}
 	getDevice(id) {}
-	getRealtimeUpdates(channel, callback) {}
 	getDeviceLatestMeasurements(deviceId) {}
+	getMeasurementSeries(
+		deviceId,
+		dateFrom = new Date(Date.now() - (24 * 60 * 60 * 1000)),
+		dateTo = new Date(),
+		aggregationType = AbstractPlatform.AggregationType.MINUTELY,
+		pageSize = 1440,
+		isRevertedOrder = true
+	) {}
 	sendDeviceOperation(deviceId, description, payload) {}
+	getRealtimeUpdates(channel, callback) {}
 
 	_get(url) {
 		return this._request({

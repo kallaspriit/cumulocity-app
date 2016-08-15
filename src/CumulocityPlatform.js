@@ -26,13 +26,30 @@ export default class CumulocityPlatform extends AbstractPlatform {
 					this._getTomorrowsDate()
 				);
 
-				return `measurement/measurements
-					?dateFrom=1970-01-01
-					&dateTo=${dateTo}
-					&pageSize=1
-					&revert=true
-					&source=${deviceId}`;
+				return 'measurement/measurements' +
+					'?dateFrom=1970-01-01' +
+					`&dateTo=${dateTo}` +
+					'&pageSize=1' +
+					'&revert=true' +
+					`&source=${deviceId}`;
 			},
+			getMeasurementSeries: (
+				deviceId,
+				dateFrom,
+				dateTo,
+				aggregationType,
+				pageSize,
+				isRevertedOrder
+			) => 'measurement/measurements/series' + // eslint-disable-line prefer-template
+				`?dateFrom=${dateFrom.toISOString()}` +
+				`&dateTo=${dateTo.toISOString()}` +
+					(aggregationType !== AbstractPlatform.AggregationType.NONE
+						? `&aggregationType=${aggregationType}`
+						: ''
+					) +
+					`&pageSize=${pageSize}` +
+					`&revert=${isRevertedOrder ? 'true' : 'false'}` +
+					`&source=${deviceId}`,
 			sendDeviceOperation: () => 'devicecontrol/operations',
 		};
 
@@ -80,6 +97,112 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._get(url).then(this._extractDevice.bind(this));
 	}
 
+	getDeviceLatestMeasurements(deviceId) {
+		const url = this._buildUrl(
+			this.urls.getDeviceLatestMeasurements(deviceId)
+		);
+
+		return this._get(url).then((response) => {
+			const measurements = response.data.measurements.reduce((result, item) => [
+				...result,
+				...this._extractMeasurements(item),
+			], []);
+
+			return {
+				[deviceId]: measurements,
+			};
+		});
+	}
+
+	getMeasurementSeries(
+		deviceId,
+		dateFrom = new Date(Date.now() - (24 * 60 * 60 * 1000)),
+		dateTo = new Date(),
+		aggregationType = CumulocityPlatform.AggregationType.NONE,
+		pageSize = 24 * 60,
+		isRevertedOrder = true
+	) {
+		const url = this._buildUrl(
+			this.urls.getMeasurementSeries(
+				deviceId,
+				dateFrom,
+				dateTo,
+				aggregationType,
+				pageSize,
+				isRevertedOrder
+			)
+		);
+
+		return this._get(url).then((response) => {
+			const values = response.data.values;
+			const indexToTypeMap = {};
+
+			const measurements = response.data.series.reduce((result, item, index) => {
+				const type = this._mapMeasurementType(item.type);
+
+				if (type === MeasurementModel.Type.UNSUPPORTED) {
+					return result;
+				}
+
+				indexToTypeMap[index] = type;
+
+				return {
+					...result,
+					[this._mapMeasurementType(item.type)]: {},
+				};
+			}, {});
+
+			Object.keys(values).forEach((timestamp) => {
+				const value = values[timestamp];
+
+				for (let i = 0; i < value.length; i++) {
+					const type = indexToTypeMap[i];
+
+					if (typeof type === 'undefined' || value[i] === null) {
+						continue;
+					}
+
+					measurements[type][timestamp] = value[i];
+				}
+			});
+
+			return {
+				[deviceId]: measurements,
+			};
+		});
+	}
+
+	_test() {
+		return this.getMeasurementSeries(
+			'2664191',
+			new Date(Date.now() - (24 * 60 * 60 * 1000)),
+			new Date(),
+			CumulocityPlatform.AggregationType.NONE,
+			1440,
+			true,
+			'c8y_LightMeasurement'
+		).then((response) => {
+			console.log('test', response);
+		});
+	}
+
+	sendDeviceOperation(deviceId, description, payload) {
+		const url = this._buildUrl(
+			this.urls.sendDeviceOperation()
+		);
+		const data = {
+			deviceId,
+			description,
+			...payload,
+		};
+
+		const headers = {
+			'Content-Type': 'application/vnd.com.nsn.cumulocity.operation+json',
+		};
+
+		return this._post(url, data, headers).then((response) => response.data.c8y_Relay);
+	}
+
 	getRealtimeUpdates(channel, callback) {
 		let isActive = true;
 
@@ -102,40 +225,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return () => {
 			isActive = false;
 		};
-	}
-
-	getDeviceLatestMeasurements(deviceId) {
-		const url = this._buildUrl(
-			this.urls.getDeviceLatestMeasurements(deviceId)
-		);
-
-		return this._get(url).then((response) => {
-			const measurements = response.data.measurements.reduce((result, item) => [
-				...result,
-				...this._extractMeasurements(item),
-			], []);
-
-			return {
-				[deviceId]: measurements,
-			};
-		});
-	}
-
-	sendDeviceOperation(deviceId, description, payload) {
-		const url = this._buildUrl(
-			this.urls.sendDeviceOperation()
-		);
-		const data = {
-			deviceId,
-			description,
-			...payload,
-		};
-
-		const headers = {
-			'Content-Type': 'application/vnd.com.nsn.cumulocity.operation+json',
-		};
-
-		return this._post(url, data, headers).then((response) => response.data.c8y_Relay);
 	}
 
 	// rest is private
