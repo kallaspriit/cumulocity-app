@@ -9,6 +9,7 @@ import {
 	GET_REALTIME_UPDATES,
 	STOP_REALTIME_UPDATES,
 	GET_DEVICE_LATEST_MEASUREMENTS,
+	GET_MEASUREMENT_SERIES,
 	SEND_DEVICE_OPERATION,
 } from '../config/constants';
 
@@ -27,6 +28,11 @@ export const getDevice = createAction(
 export const getDeviceLatestMeasurements = createAction(
 	GET_DEVICE_LATEST_MEASUREMENTS,
 	platformApi.getDeviceLatestMeasurements
+);
+
+export const getMeasurementSeries = createAction(
+	GET_MEASUREMENT_SERIES,
+	platformApi.getMeasurementSeries
 );
 
 export const sendDeviceOperation = createAction(

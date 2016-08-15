@@ -20,6 +20,7 @@ class AuthenticationView extends Component {
 
 	static propTypes = {
 		authentication: PropTypes.object.isRequired,
+		location: PropTypes.object.isRequired,
 
 		setCredentials: PropTypes.func.isRequired,
 		authenticate: PropTypes.func.isRequired,
@@ -182,8 +183,10 @@ class AuthenticationView extends Component {
 		if (this.props.authentication.info.isLoggedIn && !this.isRedirecting) {
 			this.isRedirecting = true;
 
+			const nextPathname = this.props.location.state.nextPathname || '/devices';
+
 			setTimeout(() => {
-				browserHistory.replace('/devices');
+				browserHistory.replace(nextPathname);
 			}, 1000);
 		}
 	}

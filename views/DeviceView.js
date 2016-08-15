@@ -30,7 +30,8 @@ class DeviceView extends Component {
 		params: PropTypes.object.isRequired,
 		device: PropTypes.object.isRequired,
 		realtime: PropTypes.object.isRequired,
-		measurements: PropTypes.object.isRequired,
+		latestMeasurements: PropTypes.object.isRequired,
+		measurementSeries: PropTypes.object.isRequired,
 
 		getDevice: PropTypes.func.isRequired,
 		getDeviceLatestMeasurements: PropTypes.func.isRequired,
@@ -79,6 +80,8 @@ class DeviceView extends Component {
 		const title = !device.info || device.isLoading
 			? 'Devices » loading...'
 			: `Devices » ${device.info.name}`;
+
+		console.log('measurementSeries', this.props.measurementSeries);
 
 		return (
 			<div className="device-view">
@@ -146,7 +149,7 @@ class DeviceView extends Component {
 
 		// use latest measurements if realtime info is not available
 		if (measurements.length === 0) {
-			measurements = this.props.measurements.info[deviceInfo.id] || [];
+			measurements = this.props.latestMeasurements.info[deviceInfo.id] || [];
 		}
 
 		const capabilityProps = {
@@ -164,24 +167,6 @@ class DeviceView extends Component {
 		}
 
 		return React.createElement(capabilityComponent, capabilityProps);
-
-		/*
-		switch (capability.type) {
-			case CapabilityModel.Type.HARDWARE:
-				return <HardwareCapabilityComponent {...capabilityProps} />;
-
-			case CapabilityModel.Type.LIGHT:
-				return <LightSensorCapabilityComponent {...capabilityProps} />;
-
-			case CapabilityModel.Type.MOTION:
-				return <MotionSensorCapabilityComponent {...capabilityProps} />;
-
-			default:
-				console.warn(`capability type "${capability.type}" is not supported`);
-
-				return null;
-		}
-		*/
 	}
 
 	renderChildDeviceList(childDevices) {
@@ -295,7 +280,8 @@ export default connect(
 	state => ({
 		device: state.device,
 		realtime: state.realtime,
-		measurements: state.measurements,
+		latestMeasurements: state.latestMeasurements,
+		measurementSeries: state.measurementSeries,
 	}), {
 		...platformActions,
 	}

@@ -75,8 +75,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		);
 
 		return this._get(url).then((response) => {
-			console.log('authenticate', response);
-
 			return response.data;
 		});
 	}
@@ -172,6 +170,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		});
 	}
 
+	/*
 	_test() {
 		return this.getMeasurementSeries(
 			'2664191',
@@ -185,6 +184,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			console.log('test', response);
 		});
 	}
+	*/
 
 	sendDeviceOperation(deviceId, description, payload) {
 		const url = this._buildUrl(
