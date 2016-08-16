@@ -1,11 +1,9 @@
 import path from 'path';
 import webpack from 'webpack';
 
-export const basePath = path.join(__dirname, '..');
-export const distributionPath = path.join(basePath, 'dist');
+const basePath = path.join(__dirname, '..');
 
 export default {
-	// devtool: 'cheap-module-eval-source-map',
 	devtool: 'source-map',
 	entry: [
 		'webpack-dev-server/client?http://10.220.20.140:3000',
@@ -13,7 +11,6 @@ export default {
 		'./app',
 	],
 	output: {
-		path: distributionPath,
 		filename: 'bundle.js',
 		publicPath: '/static/',
 	},
@@ -29,11 +26,12 @@ export default {
 			loaders: ['style', 'css?sourceMap', 'sass?sourceMap', 'import-glob'],
 			exclude: /node_modules/,
 			include: basePath,
+		}, {
+			test: /\.(png|woff|woff2|eot|ttf|svg|jpeg|jpg)$/,
+			loader: 'url-loader?limit=1000000',
 		}],
 	},
-	sassLoader: {
-		// includePaths: [path.resolve(__dirname, './gfx')],
-	},
+	sassLoader: {},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 	],

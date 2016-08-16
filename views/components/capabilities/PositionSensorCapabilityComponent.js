@@ -1,7 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import GoogleMap from 'google-map-react';
+
+import googleConfig from '../../../config/google-config';
 import AbstractPlatform from '../../../src/AbstractPlatform';
+
+function Marker({
+	text,
+}) {
+	return (
+		<div className="marker-component">
+			{text ? <div className="marker-component-text">{text}</div> : null}
+		</div>
+	);
+}
+
+Marker.propTypes = {
+	text: PropTypes.string,
+};
+
+Marker.defaultProps = {
+	text: '',
+};
 
 class PositionSensorCapabilityComponent extends Component {
 
@@ -24,15 +45,22 @@ class PositionSensorCapabilityComponent extends Component {
 	}
 
 	renderContents() {
+		const {
+			lat,
+			lng,
+			alt,
+		} = this.props.capability.info;
+
 		return (
-			<div>
-				POSITION
-				<ul>
-					<li><strong>Latitude:</strong> {this.props.capability.info.lat}</li>
-					<li><strong>Longitude:</strong> {this.props.capability.info.lng}</li>
-					<li><strong>Altitude:</strong> {this.props.capability.info.alt}</li>
-				</ul>
-			</div>
+			<GoogleMap
+				bootstrapURLKeys={{
+					key: googleConfig.apiKey,
+				}}
+				center={[lat, lng]}
+				zoom={10}
+			>
+				<Marker lat={lat} lng={lng} text={`Altitude: ${Math.round(alt * 10) / 10}m`} />
+			</GoogleMap>
 		);
 	}
 

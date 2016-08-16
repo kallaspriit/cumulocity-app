@@ -211,28 +211,44 @@ class DeviceView extends Component {
 		const modelToBackgroundMap = {
 			RaspPi: '/gfx/images/devices/raspberry.jpg',
 		};
-		const typeToBackgroundMap = {
-			c8y_Linux: '/gfx/images/devices/computer.jpg',
-			Light: '/gfx/images/devices/light.jpg',
-			Motion: '/gfx/images/devices/motion.jpg',
-			Relay: '/gfx/images/devices/relay.jpg',
+		const capabilityToBackgroundMap = {
+			[AbstractPlatform.CapabilityType.LIGHT]: '/gfx/images/devices/light.jpg',
+			[AbstractPlatform.CapabilityType.MOTION]: '/gfx/images/devices/motion.jpg',
+			[AbstractPlatform.CapabilityType.RELAY]: '/gfx/images/devices/relay.jpg',
+			[AbstractPlatform.CapabilityType.POSITION]: '/gfx/images/devices/position.jpg',
 		};
-		let backgroundImage = null;
 
-		backgroundImage = Object.keys(modelToBackgroundMap).reduce((background, pattern) => {
-			const regexp = new RegExp(pattern);
+		// search for capabilities
+		let backgroundImage = info.capabilities.reduce((background, capability) => {
+			if (background !== null) {
+				return background;
+			}
 
-			if (regexp.test(info.model)) {
-				background = modelToBackgroundMap[pattern]; // eslint-disable-line
+			const matchingCapabilityType = Object.keys(capabilityToBackgroundMap).find(
+				(capabilityType) => capabilityType === capability.type
+			) || null;
+
+			if (matchingCapabilityType) {
+				return capabilityToBackgroundMap[matchingCapabilityType];
 			}
 
 			return background;
-		}, backgroundImage);
+		}, null);
 
 		if (backgroundImage === null) {
-			backgroundImage = typeof typeToBackgroundMap[info.type] !== 'undefined'
-				? typeToBackgroundMap[info.type]
-				: typeToBackgroundMap[Object.keys(typeToBackgroundMap)[0]];
+			backgroundImage = Object.keys(modelToBackgroundMap).reduce((background, pattern) => {
+				const regexp = new RegExp(pattern);
+
+				if (regexp.test(info.model)) {
+					background = modelToBackgroundMap[pattern]; // eslint-disable-line
+				}
+
+				return background;
+			}, null);
+		}
+
+		if (backgroundImage === null) {
+			backgroundImage = '/gfx/images/devices/computer.jpg';
 		}
 
 		return backgroundImage;

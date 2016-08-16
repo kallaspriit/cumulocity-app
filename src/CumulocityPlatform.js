@@ -397,7 +397,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_mapMeasurementType(type) {
-		if (typeof CumulocityPlatform.easurementTypeMapping[type] === 'undefined') {
+		if (typeof CumulocityPlatform.measurementTypeMapping[type] === 'undefined') {
 			return AbstractPlatform.MeasurementType.UNSUPPORTED;
 		}
 
