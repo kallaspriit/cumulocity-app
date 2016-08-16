@@ -22,7 +22,10 @@ export default {
 			include: basePath,
 		}, {
 			test: /\.scss$/,
-			loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!sass-loader?sourceMap'),
+			loader: ExtractTextPlugin.extract(
+				'style-loader',
+				'css-loader?sourceMap!sass-loader?sourceMap!import-glob'
+			),
 			// loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
 			exclude: /node_modules/,
 			include: basePath,

@@ -7,6 +7,20 @@ import MeasurementModel from '../models/MeasurementModel';
 
 export default class CumulocityPlatform extends AbstractPlatform {
 
+	static capabilityTypeMapping = {
+		c8y_Relay: AbstractPlatform.CapabilityType.RELAY,
+		c8y_LightSensor: AbstractPlatform.CapabilityType.LIGHT,
+		c8y_MotionSensor: AbstractPlatform.CapabilityType.MOTION,
+		c8y_Hardware: AbstractPlatform.CapabilityType.HARDWARE,
+		c8y_Position: AbstractPlatform.CapabilityType.POSITION,
+	};
+
+	static measurementTypeMapping = {
+		c8y_LightMeasurement: AbstractPlatform.MeasurementType.LIGHT,
+		com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: AbstractPlatform.MeasurementType.MOTION,
+		com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: AbstractPlatform.MeasurementType.RELAY,
+	};
+
 	constructor({
 		protocol = 'https',
 		host = 'cumulocity.com',
@@ -61,19 +75,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			sendDeviceOperation: () => 'devicecontrol/operations',
 		};
 
-		this._capabilityTypeMapping = {
-			c8y_Relay: AbstractPlatform.CapabilityType.RELAY,
-			c8y_LightSensor: AbstractPlatform.CapabilityType.LIGHT,
-			c8y_MotionSensor: AbstractPlatform.CapabilityType.MOTION,
-			c8y_Hardware: AbstractPlatform.CapabilityType.HARDWARE,
-		};
-
-		this._measurementTypeMapping = {
-			c8y_LightMeasurement: AbstractPlatform.MeasurementType.LIGHT,
-			com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: AbstractPlatform.MeasurementType.MOTION,
-			com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: AbstractPlatform.MeasurementType.RELAY,
-		};
-
 		this._realtimeId = 1;
 	}
 
@@ -82,7 +83,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			this.urls.authenticate()
 		);
 
-		return this._get(url).then((response) => response.data);
+		return this._get(url).then(
+			(response) => response.data
+		);
 	}
 
 	getDevices() {
@@ -90,7 +93,11 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			this.urls.getDevices()
 		);
 
-		return this._get(url).then(this._extractDevices.bind(this));
+		return this._get(url).then(
+			(response) => response.data.managedObjects.map(
+				this._mapManagedObjectToDevice.bind(this)
+			)
+		);
 	}
 
 	getDevice(id) {
@@ -98,7 +105,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			this.urls.getDevice(id)
 		);
 
-		return this._get(url).then(this._extractDevice.bind(this));
+		return this._get(url).then(
+			(response) => this._mapManagedObjectToDevice(response.data)
+		);
 	}
 
 	getDeviceLatestMeasurements(
@@ -110,16 +119,18 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			this.urls.getDeviceLatestMeasurements(deviceId)
 		);
 
-		return this._get(url).then((response) => {
-			const measurements = response.data.measurements.reduce((result, item) => [
-				...result,
-				...this._extractMeasurements(item),
-			], []);
+		return this._get(url).then(
+			(response) => {
+				const measurements = response.data.measurements.reduce((result, item) => [
+					...result,
+					...this._extractMeasurements(item),
+				], []);
 
-			return {
-				[deviceId]: measurements,
-			};
-		});
+				return {
+					[deviceId]: measurements,
+				};
+			}
+		);
 	}
 
 	getMeasurementSeries(
@@ -141,59 +152,46 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			)
 		);
 
-		return this._get(url).then((response) => {
-			const values = response.data.values;
-			const indexToTypeMap = {};
+		return this._get(url).then(
+			(response) => {
+				const values = response.data.values;
+				const indexToTypeMap = {};
 
-			const measurements = response.data.series.reduce((result, item, index) => {
-				const type = this._mapMeasurementType(item.type);
+				const measurements = response.data.series.reduce((result, item, index) => {
+					const type = this._mapMeasurementType(item.type);
 
-				if (type === AbstractPlatform.MeasurementType.UNSUPPORTED) {
-					return result;
-				}
-
-				indexToTypeMap[index] = type;
-
-				return {
-					...result,
-					[this._mapMeasurementType(item.type)]: [],
-				};
-			}, {});
-
-			Object.keys(values).forEach((timestamp) => {
-				const value = values[timestamp];
-
-				for (let i = 0; i < value.length; i++) {
-					const type = indexToTypeMap[i];
-
-					if (typeof type === 'undefined' || value[i] === null) {
-						continue;
+					if (type === AbstractPlatform.MeasurementType.UNSUPPORTED) {
+						return result;
 					}
 
-					measurements[type].push([new Date(timestamp), value[i].min, value[i].max]);
-				}
-			});
+					indexToTypeMap[index] = type;
 
-			return {
-				[deviceId]: measurements,
-			};
-		});
-	}
+					return {
+						...result,
+						[this._mapMeasurementType(item.type)]: [],
+					};
+				}, {});
 
-	/*
-	_test() {
-		return this.getMeasurementSeries(
-			'2664191',
-			new Date(Date.now() - (24 * 60 * 60 * 1000)),
-			new Date(),
-			AbstractPlatform.AggregationType.NONE,
-			24 * 60,
-			true
-		).then((response) => {
-			console.log('test', response);
-		});
+				Object.keys(values).forEach((timestamp) => {
+					const value = values[timestamp];
+
+					for (let i = 0; i < value.length; i++) {
+						const type = indexToTypeMap[i];
+
+						if (typeof type === 'undefined' || value[i] === null) {
+							continue;
+						}
+
+						measurements[type].push([new Date(timestamp), value[i].min, value[i].max]);
+					}
+				});
+
+				return {
+					[deviceId]: measurements,
+				};
+			}
+		);
 	}
-	*/
 
 	sendDeviceOperation(deviceId, description, payload) {
 		const url = this._buildUrl(
@@ -209,7 +207,9 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			'Content-Type': 'application/vnd.com.nsn.cumulocity.operation+json',
 		};
 
-		return this._post(url, data, headers).then((response) => response.data.c8y_Relay);
+		return this._post(url, data, headers).then(
+			(response) => response.data.c8y_Relay
+		);
 	}
 
 	getRealtimeUpdates(channel, callback) {
@@ -332,16 +332,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		});
 	}
 
-	_extractDevices(response) {
-		return response.data.managedObjects.map(
-			this._mapManagedObjectToDevice.bind(this)
-		);
-	}
-
-	_extractDevice(response) {
-		return this._mapManagedObjectToDevice(response.data);
-	}
-
 	_extractMeasurements(info) {
 		return Object.keys(info).reduce((measurements, key) => {
 			const measurementType = this._mapMeasurementType(key);
@@ -399,19 +389,19 @@ export default class CumulocityPlatform extends AbstractPlatform {
 	}
 
 	_mapCapabilityType(type) {
-		if (typeof this._capabilityTypeMapping[type] === 'undefined') {
+		if (typeof CumulocityPlatform.capabilityTypeMapping[type] === 'undefined') {
 			return AbstractPlatform.CapabilityType.UNSUPPORTED;
 		}
 
-		return this._capabilityTypeMapping[type];
+		return CumulocityPlatform.capabilityTypeMapping[type];
 	}
 
 	_mapMeasurementType(type) {
-		if (typeof this._measurementTypeMapping[type] === 'undefined') {
+		if (typeof CumulocityPlatform.easurementTypeMapping[type] === 'undefined') {
 			return AbstractPlatform.MeasurementType.UNSUPPORTED;
 		}
 
-		return this._measurementTypeMapping[type];
+		return CumulocityPlatform.measurementTypeMapping[type];
 	}
 
 	_mapChildDevice(info) {

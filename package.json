@@ -68,6 +68,7 @@
     "eslint": "^3.2.2",
     "eslint-config-sl": "^1.5.0",
     "expect": "^1.20.2",
+    "import-glob-loader": "^1.1.0",
     "mocha": "^3.0.2",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",

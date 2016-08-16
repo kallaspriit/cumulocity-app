@@ -43,8 +43,6 @@ class DeviceView extends Component {
 	}
 
 	componentWillMount() {
-		this.props.getDevice(this.props.params.deviceId);
-
 		this.loadDeviceInfo(this.props.params.deviceId);
 	}
 

@@ -26,7 +26,7 @@ export default {
 		}, {
 			test: /\.scss$/,
 			// loader: ExtractTextPlugin.extract('style', 'css?sourceMap', 'sass?sourceMap'),
-			loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
+			loaders: ['style', 'css?sourceMap', 'sass?sourceMap', 'import-glob'],
 			exclude: /node_modules/,
 			include: basePath,
 		}],

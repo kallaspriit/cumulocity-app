@@ -40,15 +40,11 @@ BODY {
 	}
 }
 
-@import "views/device-view";
-@import "views/authentication-view";
+// views
+@import "views/*.scss";
 
-@import "components/header-component";
-@import "components/loader-component";
-@import "components/error-component";
-@import "components/message-component";
+// components
+@import "components/*.scss";
 
-@import "components/capabilities/hardware-capability-component";
-@import "components/capabilities/light-sensor-capability-component";
-@import "components/capabilities/motion-sensor-capability-component";
-@import "components/capabilities/relay-actuator-capability-component";
+// capabilities
+@import "components/capabilities/*.scss";
