@@ -5,8 +5,7 @@ import classNames from 'classnames';
 import CircularProgress from 'material-ui/CircularProgress';
 import Toggle from 'material-ui/Toggle';
 
-import CapabilityModel from '../../../models/CapabilityModel';
-import MeasurementModel from '../../../models/MeasurementModel';
+import AbstractPlatform from '../../../src/AbstractPlatform';
 
 import * as platformActions from '../../../actions/platform-actions';
 
@@ -21,7 +20,7 @@ class RelayActuatorCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return CapabilityModel.Type.RELAY;
+		return AbstractPlatform.CapabilityType.RELAY;
 	}
 
 	render() {
@@ -80,7 +79,7 @@ class RelayActuatorCapabilityComponent extends Component {
 		} = this.props;
 
 		return measurements.find(
-			(item) => item.type === MeasurementModel.Type.RELAY
+			(item) => item.type === AbstractPlatform.MeasurementType.RELAY
 		) || null;
 	}
 

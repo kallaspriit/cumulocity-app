@@ -1,18 +1,11 @@
-import keyMirror from 'keymirror';
+import AbstractPlatform from '../src/AbstractPlatform';
 import AbstractModel from '../src/AbstractModel';
 
 export default class MeasurementModel extends AbstractModel {
 
-	static Type = keyMirror({
-		UNSUPPORTED: null,
-		LIGHT: null,
-		MOTION: null,
-		RELAY: null,
-	});
-
 	getSchema() {
 		return {
-			type: Object.keys(MeasurementModel.Type),
+			type: Object.keys(AbstractPlatform.MeasurementType),
 			info: Object,
 		};
 	}

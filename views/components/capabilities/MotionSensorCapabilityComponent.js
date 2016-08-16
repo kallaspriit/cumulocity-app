@@ -4,8 +4,7 @@ import classNames from 'classnames';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
-import CapabilityModel from '../../../models/CapabilityModel';
-import MeasurementModel from '../../../models/MeasurementModel';
+import AbstractPlatform from '../../../src/AbstractPlatform';
 
 class MotionSensorCapabilityComponent extends Component {
 
@@ -16,7 +15,7 @@ class MotionSensorCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return CapabilityModel.Type.MOTION;
+		return AbstractPlatform.CapabilityType.MOTION;
 	}
 
 	render() {
@@ -33,7 +32,7 @@ class MotionSensorCapabilityComponent extends Component {
 		} = this.props;
 
 		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.MOTION
+			(item) => item.type === AbstractPlatform.MeasurementType.MOTION
 		) || null;
 
 		if (!measurement) {

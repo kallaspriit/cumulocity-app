@@ -1,19 +1,11 @@
-import keyMirror from 'keymirror';
 import AbstractModel from '../src/AbstractModel';
+import AbstractPlatform from '../src/AbstractPlatform';
 
 export default class CapabilityModel extends AbstractModel {
 
-	static Type = keyMirror({
-		UNSUPPORTED: null,
-		HARDWARE: null,
-		RELAY: null,
-		LIGHT: null,
-		MOTION: null,
-	});
-
 	getSchema() {
 		return {
-			type: Object.keys(CapabilityModel.Type),
+			type: Object.keys(AbstractPlatform.CapabilityType),
 			info: Object,
 		};
 	}

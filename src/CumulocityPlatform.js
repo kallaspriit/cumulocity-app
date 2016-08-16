@@ -1,4 +1,6 @@
 import AbstractPlatform from './AbstractPlatform';
+
+// TODO remove dependency
 import DeviceModel from '../models/DeviceModel';
 import CapabilityModel from '../models/CapabilityModel';
 import MeasurementModel from '../models/MeasurementModel';
@@ -54,16 +56,16 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		};
 
 		this._capabilityTypeMapping = {
-			c8y_Relay: CapabilityModel.Type.RELAY,
-			c8y_LightSensor: CapabilityModel.Type.LIGHT,
-			c8y_MotionSensor: CapabilityModel.Type.MOTION,
-			c8y_Hardware: CapabilityModel.Type.HARDWARE,
+			c8y_Relay: AbstractPlatform.CapabilityType.RELAY,
+			c8y_LightSensor: AbstractPlatform.CapabilityType.LIGHT,
+			c8y_MotionSensor: AbstractPlatform.CapabilityType.MOTION,
+			c8y_Hardware: AbstractPlatform.CapabilityType.HARDWARE,
 		};
 
 		this._measurementTypeMapping = {
-			c8y_LightMeasurement: MeasurementModel.Type.LIGHT,
-			com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: MeasurementModel.Type.MOTION,
-			com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: MeasurementModel.Type.RELAY,
+			c8y_LightMeasurement: AbstractPlatform.MeasurementType.LIGHT,
+			com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: AbstractPlatform.MeasurementType.MOTION,
+			com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: AbstractPlatform.MeasurementType.RELAY,
 		};
 
 		this._realtimeId = 1;
@@ -136,7 +138,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			const measurements = response.data.series.reduce((result, item, index) => {
 				const type = this._mapMeasurementType(item.type);
 
-				if (type === MeasurementModel.Type.UNSUPPORTED) {
+				if (type === AbstractPlatform.MeasurementType.UNSUPPORTED) {
 					return result;
 				}
 
@@ -334,7 +336,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return Object.keys(info).reduce((measurements, key) => {
 			const measurementType = this._mapMeasurementType(key);
 
-			if (measurementType !== MeasurementModel.Type.UNSUPPORTED) {
+			if (measurementType !== AbstractPlatform.MeasurementType.UNSUPPORTED) {
 				const measurementInfo = info[key];
 				const measurement = new MeasurementModel({
 					type: measurementType,
@@ -352,7 +354,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return Object.keys(info).reduce((capabilities, key) => {
 			const capabilityType = this._mapCapabilityType(key);
 
-			if (capabilityType !== CapabilityModel.Type.UNSUPPORTED) {
+			if (capabilityType !== AbstractPlatform.CapabilityType.UNSUPPORTED) {
 				const capabilityInfo = info[key];
 				const capability = new CapabilityModel({
 					type: capabilityType,
@@ -388,7 +390,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 	_mapCapabilityType(type) {
 		if (typeof this._capabilityTypeMapping[type] === 'undefined') {
-			return CapabilityModel.Type.UNSUPPORTED;
+			return AbstractPlatform.CapabilityType.UNSUPPORTED;
 		}
 
 		return this._capabilityTypeMapping[type];
@@ -396,7 +398,7 @@ export default class CumulocityPlatform extends AbstractPlatform {
 
 	_mapMeasurementType(type) {
 		if (typeof this._measurementTypeMapping[type] === 'undefined') {
-			return MeasurementModel.Type.UNSUPPORTED;
+			return AbstractPlatform.MeasurementType.UNSUPPORTED;
 		}
 
 		return this._measurementTypeMapping[type];

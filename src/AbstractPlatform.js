@@ -10,6 +10,21 @@ export default class AbstractPlatform {
 		NONE: null,
 	});
 
+	static CapabilityType = keyMirror({
+		UNSUPPORTED: null,
+		HARDWARE: null,
+		RELAY: null,
+		LIGHT: null,
+		MOTION: null,
+	});
+
+	static MeasurementType = keyMirror({
+		UNSUPPORTED: null,
+		LIGHT: null,
+		MOTION: null,
+		RELAY: null,
+	});
+
 	constructor() {
 		this.store = null;
 	}

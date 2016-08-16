@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import changeCase from 'change-case';
 
-import CapabilityModel from '../../../models/CapabilityModel';
+import AbstractPlatform from '../../../src/AbstractPlatform';
 
 class HardwareCapabilityComponent extends Component {
 
@@ -13,7 +13,7 @@ class HardwareCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return CapabilityModel.Type.HARDWARE;
+		return AbstractPlatform.CapabilityType.HARDWARE;
 	}
 
 	render() {

@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
-import CapabilityModel from '../../../models/CapabilityModel';
-import MeasurementModel from '../../../models/MeasurementModel';
+import AbstractPlatform from '../../../src/AbstractPlatform';
 import GaugeComponent from '../GaugeComponent';
 import RangeChartComponent from '../RangeChartComponent';
 
@@ -18,7 +17,7 @@ class LightSensorCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return CapabilityModel.Type.LIGHT;
+		return AbstractPlatform.CapabilityType.LIGHT;
 	}
 
 	render() {
@@ -36,7 +35,7 @@ class LightSensorCapabilityComponent extends Component {
 		} = this.props;
 
 		const measurement = measurements.find(
-			(item) => item.type === MeasurementModel.Type.LIGHT
+			(item) => item.type === AbstractPlatform.MeasurementType.LIGHT
 		) || null;
 
 		if (!measurement) {
@@ -67,7 +66,7 @@ class LightSensorCapabilityComponent extends Component {
 			measurementSeries,
 		} = this.props;
 
-		const lightMeasurements = measurementSeries[MeasurementModel.Type.LIGHT];
+		const lightMeasurements = measurementSeries[AbstractPlatform.MeasurementType.LIGHT];
 
 		if (!lightMeasurements) {
 			return null;
