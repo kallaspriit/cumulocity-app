@@ -36,7 +36,11 @@ export default class AbstractPlatform {
 	authenticate(tenant, username, password) {}
 	getDevices() {}
 	getDevice(id) {}
-	getDeviceLatestMeasurements(deviceId) {}
+	getDeviceLatestMeasurements(
+		deviceId,
+		pageSize = 10,
+		fragmentType = null
+	) {}
 	getMeasurementSeries(
 		deviceId,
 		dateFrom = new Date(Date.now() - (24 * 60 * 60 * 1000)),

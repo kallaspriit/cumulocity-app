@@ -23,7 +23,11 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			getDevices: () => 'inventory/managedObjects?fragmentType=c8y_IsDevice',
 			getDevice: (id) => `inventory/managedObjects/${id}`,
 			getRealtime: () => 'cep/realtime',
-			getDeviceLatestMeasurements: (deviceId) => {
+			getDeviceLatestMeasurements: (
+				deviceId,
+				pageSize = 10,
+				fragmentType = null
+			) => {
 				const dateTo = this._formatDate(
 					this._getTomorrowsDate()
 				);
@@ -31,9 +35,12 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				return 'measurement/measurements' +
 					'?dateFrom=1970-01-01' +
 					`&dateTo=${dateTo}` +
-					'&pageSize=1' +
+					`&pageSize=${pageSize}` +
 					'&revert=true' +
-					`&source=${deviceId}`;
+					`&source=${deviceId}` +
+					`${fragmentType !== null
+						? `&fragmentType=${fragmentType}`
+						: ''}`;
 			},
 			getMeasurementSeries: (
 				deviceId,
@@ -42,13 +49,12 @@ export default class CumulocityPlatform extends AbstractPlatform {
 				aggregationType,
 				pageSize,
 				isRevertedOrder
-			) => 'measurement/measurements/series' + // eslint-disable-line prefer-template
+			) => 'measurement/measurements/series' +
 				`?dateFrom=${dateFrom.toISOString()}` +
 				`&dateTo=${dateTo.toISOString()}` +
-					(aggregationType !== AbstractPlatform.AggregationType.NONE
+					`${aggregationType !== AbstractPlatform.AggregationType.NONE
 						? `&aggregationType=${aggregationType}`
-						: ''
-					) +
+						: ''}` +
 					`&pageSize=${pageSize}` +
 					`&revert=${isRevertedOrder ? 'true' : 'false'}` +
 					`&source=${deviceId}`,
@@ -95,7 +101,11 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._get(url).then(this._extractDevice.bind(this));
 	}
 
-	getDeviceLatestMeasurements(deviceId) {
+	getDeviceLatestMeasurements(
+		deviceId,
+		pageSize = 10,
+		fragmentType = null
+	) {
 		const url = this._buildUrl(
 			this.urls.getDeviceLatestMeasurements(deviceId)
 		);
