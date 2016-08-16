@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 
 const basePath = path.join(__dirname, '..');
+const outputPath = path.join(basePath, 'dev');
 
 export default {
 	devtool: 'source-map',
@@ -11,6 +12,7 @@ export default {
 		'./app',
 	],
 	output: {
+		path: outputPath,
 		filename: 'bundle.js',
 		publicPath: '/static/',
 	},
