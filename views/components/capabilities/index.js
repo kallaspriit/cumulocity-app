@@ -6,3 +6,4 @@ export PositionSensorCapabilityComponent from './PositionSensorCapabilityCompone
 export ButtonSensorCapabilityComponent from './ButtonSensorCapabilityComponent';
 export TemperatureSensorCapabilityComponent from './TemperatureSensorCapabilityComponent';
 export MonitoringSensorCapabilityComponent from './MonitoringSensorCapabilityComponent';
+export DigitalAnalogConverterCapabilityComponent from './DigitalAnalogConverterCapabilityComponent';

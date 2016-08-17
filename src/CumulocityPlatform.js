@@ -17,6 +17,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		com_stagnationlab_c8y_driver_sensors_AbstractButtonSensor_ButtonSensor: AbstractPlatform.CapabilityType.BUTTON,
 		com_stagnationlab_c8y_driver_sensors_AbstractMonitoringSensor_MonitoringSensor:
 			AbstractPlatform.CapabilityType.MONITORING,
+		com_stagnationlab_c8y_driver_devices_DigitalAnalogConverter:
+			AbstractPlatform.CapabilityType.DIGITAL_ANALOG_CONVERTER,
 	};
 
 	static measurementTypeMapping = {
