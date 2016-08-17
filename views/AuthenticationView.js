@@ -39,6 +39,10 @@ class AuthenticationView extends Component {
 		this.isRedirecting = false;
 	}
 
+	componentDidMount() {
+		this.checkForAutomaticLogin();
+	}
+
 	componentDidUpdate() {
 		this.checkForAuthenticationSuccessful();
 	}
@@ -188,6 +192,12 @@ class AuthenticationView extends Component {
 			setTimeout(() => {
 				browserHistory.replace(nextPathname);
 			}, 1000);
+		}
+	}
+
+	checkForAutomaticLogin() {
+		if (this.state.tenant.length > 0 && this.state.username.length > 0 && this.state.password.length > 0) {
+			this.handleLogin();
 		}
 	}
 }
