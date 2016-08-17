@@ -217,6 +217,7 @@ class DeviceView extends Component {
 			[AbstractPlatform.CapabilityType.RELAY]: '/gfx/images/devices/relay.jpg',
 			[AbstractPlatform.CapabilityType.POSITION]: '/gfx/images/devices/position.jpg',
 			[AbstractPlatform.CapabilityType.BUTTON]: '/gfx/images/devices/button.jpg',
+			[AbstractPlatform.CapabilityType.TEMPERATURE]: '/gfx/images/devices/temperature.jpg',
 		};
 
 		// search for capabilities

@@ -13,11 +13,13 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		c8y_MotionSensor: AbstractPlatform.CapabilityType.MOTION,
 		c8y_Hardware: AbstractPlatform.CapabilityType.HARDWARE,
 		c8y_Position: AbstractPlatform.CapabilityType.POSITION,
+		c8y_TemperatureSensor: AbstractPlatform.CapabilityType.TEMPERATURE,
 		com_stagnationlab_c8y_driver_sensors_AbstractButtonSensor_ButtonSensor: AbstractPlatform.CapabilityType.BUTTON,
 	};
 
 	static measurementTypeMapping = {
 		c8y_LightMeasurement: AbstractPlatform.MeasurementType.LIGHT,
+		c8y_TemperatureMeasurement: AbstractPlatform.MeasurementType.TEMPERATURE,
 		com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: AbstractPlatform.MeasurementType.MOTION,
 		com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: AbstractPlatform.MeasurementType.RELAY,
 		com_stagnationlab_c8y_driver_measurements_ButtonStateMeasurement: AbstractPlatform.MeasurementType.BUTTON,

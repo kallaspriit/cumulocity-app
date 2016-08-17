@@ -18,6 +18,7 @@ export default class AbstractPlatform {
 		MOTION: null,
 		POSITION: null,
 		BUTTON: null,
+		TEMPERATURE: null,
 	});
 
 	static MeasurementType = keyMirror({
@@ -26,6 +27,7 @@ export default class AbstractPlatform {
 		MOTION: null,
 		RELAY: null,
 		BUTTON: null,
+		TEMPERATURE: null,
 	});
 
 	constructor() {
