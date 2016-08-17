@@ -78,7 +78,7 @@ class TemperatureSensorCapabilityComponent extends Component {
 				height={200}
 				min={0}
 				max={100}
-				data={measurements}
+				data={measurements.T}
 			/>
 		);
 	}

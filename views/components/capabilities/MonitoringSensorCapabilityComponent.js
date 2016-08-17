@@ -7,7 +7,7 @@ import AbstractPlatform from '../../../src/AbstractPlatform';
 import GaugeComponent from '../GaugeComponent';
 import RangeChartComponent from '../RangeChartComponent';
 
-class LightSensorCapabilityComponent extends Component {
+class MonitoringSensorCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
@@ -17,12 +17,12 @@ class LightSensorCapabilityComponent extends Component {
 	};
 
 	static getType() {
-		return AbstractPlatform.CapabilityType.LIGHT;
+		return AbstractPlatform.CapabilityType.MONITORING;
 	}
 
 	render() {
 		return (
-			<div className="capability-component light-sensor-capability-component">
+			<div className="capability-component monitoring-sensor-capability-component">
 				{this.renderGauge()}
 				{this.renderRangeChart()}
 			</div>
@@ -35,7 +35,7 @@ class LightSensorCapabilityComponent extends Component {
 		} = this.props;
 
 		const measurement = measurements.find(
-			(item) => item.type === AbstractPlatform.MeasurementType.LIGHT
+			(item) => item.type === AbstractPlatform.MeasurementType.MONITORING
 		) || null;
 
 		if (!measurement) {
@@ -46,16 +46,16 @@ class LightSensorCapabilityComponent extends Component {
 			);
 		}
 
-		const value = measurement.info.e.value;
-		const unit = measurement.info.e.unit;
+		const value = measurement.info.freeMemory.value;
+		const unit = measurement.info.freeMemory.unit;
 
 		return (
 			<GaugeComponent
-				title="Current intensity"
+				title="Current free memory"
 				unit={unit}
 				height={200}
 				min={0}
-				max={100}
+				max={1000}
 				value={value}
 			/>
 		);
@@ -66,7 +66,7 @@ class LightSensorCapabilityComponent extends Component {
 			measurementSeries,
 		} = this.props;
 
-		const measurements = measurementSeries[AbstractPlatform.MeasurementType.LIGHT];
+		const measurements = measurementSeries[AbstractPlatform.MeasurementType.MONITORING];
 
 		if (!measurements) {
 			return null;
@@ -74,11 +74,11 @@ class LightSensorCapabilityComponent extends Component {
 
 		return (
 			<RangeChartComponent
-				title="Intensity history"
+				title="Free memory history"
 				height={200}
 				min={0}
-				max={100}
-				data={measurements.e}
+				max={1000}
+				data={measurements.freeMemory}
 			/>
 		);
 	}
@@ -89,4 +89,4 @@ export default connect(
 	state => ({
 	}), {
 	}
-)(LightSensorCapabilityComponent);
+)(MonitoringSensorCapabilityComponent);

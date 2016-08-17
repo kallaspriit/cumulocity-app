@@ -15,6 +15,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		c8y_Position: AbstractPlatform.CapabilityType.POSITION,
 		c8y_TemperatureSensor: AbstractPlatform.CapabilityType.TEMPERATURE,
 		com_stagnationlab_c8y_driver_sensors_AbstractButtonSensor_ButtonSensor: AbstractPlatform.CapabilityType.BUTTON,
+		com_stagnationlab_c8y_driver_sensors_AbstractMonitoringSensor_MonitoringSensor:
+			AbstractPlatform.CapabilityType.MONITORING,
 	};
 
 	static measurementTypeMapping = {
@@ -23,6 +25,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		com_stagnationlab_c8y_driver_measurements_MotionStateMeasurement: AbstractPlatform.MeasurementType.MOTION,
 		com_stagnationlab_c8y_driver_measurements_RelayStateMeasurement: AbstractPlatform.MeasurementType.RELAY,
 		com_stagnationlab_c8y_driver_measurements_ButtonStateMeasurement: AbstractPlatform.MeasurementType.BUTTON,
+		com_stagnationlab_c8y_driver_measurements_DeviceMonitoringMeasurement:
+			AbstractPlatform.MeasurementType.MONITORING,
 	};
 
 	constructor({
@@ -159,34 +163,54 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		return this._get(url).then(
 			(response) => {
 				const values = response.data.values;
-				const indexToTypeMap = {};
+				const indexToSeriesMap = {};
 
 				const measurements = response.data.series.reduce((result, item, index) => {
 					const type = this._mapMeasurementType(item.type);
+					const name = item.name;
 
 					if (type === AbstractPlatform.MeasurementType.UNSUPPORTED) {
 						return result;
 					}
 
-					indexToTypeMap[index] = type;
-
-					return {
-						...result,
-						[this._mapMeasurementType(item.type)]: [],
+					indexToSeriesMap[index] = {
+						type,
+						name,
 					};
+
+					const newResult = {
+						...result,
+					};
+
+					if (typeof newResult[type] === 'undefined') {
+						newResult[type] = {};
+					}
+
+					newResult[type][name] = [];
+
+					return newResult;
 				}, {});
+
+				console.log('measurements', measurements);
 
 				Object.keys(values).forEach((timestamp) => {
 					const value = values[timestamp];
 
 					for (let i = 0; i < value.length; i++) {
-						const type = indexToTypeMap[i];
+						if (typeof indexToSeriesMap[i] === 'undefined') {
+							continue;
+						}
+
+						const {
+							type,
+							name,
+						} = indexToSeriesMap[i];
 
 						if (typeof type === 'undefined' || value[i] === null) {
 							continue;
 						}
 
-						measurements[type].push([new Date(timestamp), value[i].min, value[i].max]);
+						measurements[type][name].push([new Date(timestamp), value[i].min, value[i].max]);
 					}
 				});
 

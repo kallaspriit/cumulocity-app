@@ -218,6 +218,7 @@ class DeviceView extends Component {
 			[AbstractPlatform.CapabilityType.POSITION]: '/gfx/images/devices/position.jpg',
 			[AbstractPlatform.CapabilityType.BUTTON]: '/gfx/images/devices/button.jpg',
 			[AbstractPlatform.CapabilityType.TEMPERATURE]: '/gfx/images/devices/temperature.jpg',
+			[AbstractPlatform.CapabilityType.MONITORING]: '/gfx/images/devices/monitoring.jpg',
 		};
 
 		// search for capabilities
