@@ -187,7 +187,11 @@ class AuthenticationView extends Component {
 		if (this.props.authentication.info.isLoggedIn && !this.isRedirecting) {
 			this.isRedirecting = true;
 
-			const nextPathname = this.props.location.state.nextPathname || '/devices';
+			let nextPathname = '/devices';
+
+			if (this.props.location.state !== null && this.props.location.state.nextPathname) {
+				nextPathname = this.props.location.state.nextPathname;
+			}
 
 			setTimeout(() => {
 				browserHistory.replace(nextPathname);
