@@ -3,3 +3,4 @@ export LightSensorCapabilityComponent from './LightSensorCapabilityComponent';
 export MotionSensorCapabilityComponent from './MotionSensorCapabilityComponent';
 export RelayActuatorCapabilityComponent from './RelayActuatorCapabilityComponent';
 export PositionSensorCapabilityComponent from './PositionSensorCapabilityComponent';
+export ButtonSensorCapabilityComponent from './ButtonSensorCapabilityComponent';

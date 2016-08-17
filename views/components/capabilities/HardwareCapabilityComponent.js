@@ -19,22 +19,22 @@ class HardwareCapabilityComponent extends Component {
 	render() {
 		return (
 			<div className="capability-component hardware-capability-component">
-				{this.renderContents()}
+				{this.renderInfoList()}
 			</div>
 		);
 	}
 
-	renderContents() {
+	renderInfoList() {
 		return (
 			<ul className="info-list">
 				{Object.keys(this.props.capability.info).map(
-					(key) => this.renderHardwareListItem(key, this.props.capability.info[key])
+					(key) => this.renderInfoListItem(key, this.props.capability.info[key])
 				)}
 			</ul>
 		);
 	}
 
-	renderHardwareListItem(key, value) {
+	renderInfoListItem(key, value) {
 		return (
 			<li key={key}>
 				<strong>{changeCase.sentenceCase(key)}:</strong> {value}
