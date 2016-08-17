@@ -191,8 +191,6 @@ export default class CumulocityPlatform extends AbstractPlatform {
 					return newResult;
 				}, {});
 
-				console.log('measurements', measurements);
-
 				Object.keys(values).forEach((timestamp) => {
 					const value = values[timestamp];
 
