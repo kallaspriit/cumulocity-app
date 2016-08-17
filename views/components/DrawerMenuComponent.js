@@ -4,6 +4,9 @@ import { browserHistory } from 'react-router';
 
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 import * as menuActions from '../../actions/menu-actions';
 
@@ -23,9 +26,23 @@ class DrawerMenuComponent extends Component {
 				open={this.props.menu.isOpen}
 				docked={false}
 				disableSwipeToOpen={false}
+				className="drawer-menu-component"
 			>
+				<AppBar
+					title="Menu"
+					className="app-bar"
+					iconElementLeft={this.renderIconElementLeft()}
+				/>
 				<MenuItem onTouchTap={this.handleOpen('devices')}>Devices</MenuItem>
 			</Drawer>
+		);
+	}
+
+	renderIconElementLeft() {
+		return (
+			<IconButton onTouchTap={() => this.handleClose()}>
+				<NavigationClose />
+			</IconButton>
 		);
 	}
 
@@ -43,6 +60,10 @@ class DrawerMenuComponent extends Component {
 
 			browserHistory.push(`/${view}`);
 		};
+	}
+
+	handleClose() {
+		this.props.closeMainMenu();
 	}
 }
 
