@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import GoogleMap from 'google-map-react';
 
@@ -24,7 +23,7 @@ Marker.defaultProps = {
 	text: '',
 };
 
-class PositionSensorCapabilityComponent extends Component {
+export default class PositionSensorCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
@@ -65,9 +64,3 @@ class PositionSensorCapabilityComponent extends Component {
 	}
 
 }
-
-export default connect(
-	state => ({
-	}), {
-	}
-)(PositionSensorCapabilityComponent);

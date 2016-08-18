@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import changeCase from 'change-case';
 
 import AbstractPlatform from '../../../src/AbstractPlatform';
 
-class HardwareCapabilityComponent extends Component {
+export default class HardwareCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
@@ -42,9 +41,3 @@ class HardwareCapabilityComponent extends Component {
 		);
 	}
 }
-
-export default connect(
-	state => ({
-	}), {
-	}
-)(HardwareCapabilityComponent);

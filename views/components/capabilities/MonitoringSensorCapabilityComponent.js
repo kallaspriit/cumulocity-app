@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
@@ -7,7 +6,7 @@ import AbstractPlatform from '../../../src/AbstractPlatform';
 import GaugeComponent from '../GaugeComponent';
 import RangeChartComponent from '../RangeChartComponent';
 
-class MonitoringSensorCapabilityComponent extends Component {
+export default class MonitoringSensorCapabilityComponent extends Component {
 
 	static propTypes = {
 		capability: PropTypes.object.isRequired,
@@ -84,9 +83,3 @@ class MonitoringSensorCapabilityComponent extends Component {
 	}
 
 }
-
-export default connect(
-	state => ({
-	}), {
-	}
-)(MonitoringSensorCapabilityComponent);
