@@ -19,6 +19,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 			AbstractPlatform.CapabilityType.MONITORING,
 		com_stagnationlab_c8y_driver_devices_DigitalAnalogConverter:
 			AbstractPlatform.CapabilityType.DIGITAL_ANALOG_CONVERTER,
+		com_stagnationlab_c8y_driver_sensors_AbstractWeatherSensor_WeatherSensor:
+			AbstractPlatform.CapabilityType.WEATHER,
 	};
 
 	static measurementTypeMapping = {
@@ -29,6 +31,8 @@ export default class CumulocityPlatform extends AbstractPlatform {
 		com_stagnationlab_c8y_driver_measurements_ButtonStateMeasurement: AbstractPlatform.MeasurementType.BUTTON,
 		com_stagnationlab_c8y_driver_measurements_DeviceMonitoringMeasurement:
 			AbstractPlatform.MeasurementType.MONITORING,
+		com_stagnationlab_c8y_driver_measurements_WeatherMeasurement:
+			AbstractPlatform.MeasurementType.WEATHER,
 	};
 
 	constructor({

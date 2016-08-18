@@ -220,6 +220,7 @@ class DeviceView extends Component {
 			[AbstractPlatform.CapabilityType.TEMPERATURE]: '/gfx/images/devices/temperature.jpg',
 			[AbstractPlatform.CapabilityType.MONITORING]: '/gfx/images/devices/monitoring.jpg',
 			[AbstractPlatform.CapabilityType.DIGITAL_ANALOG_CONVERTER]: '/gfx/images/devices/dac.jpg',
+			[AbstractPlatform.CapabilityType.WEATHER]: '/gfx/images/devices/weather.jpg',
 		};
 
 		// search for capabilities

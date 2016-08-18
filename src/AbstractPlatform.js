@@ -21,6 +21,7 @@ export default class AbstractPlatform {
 		TEMPERATURE: null,
 		MONITORING: null,
 		DIGITAL_ANALOG_CONVERTER: null,
+		WEATHER: null,
 	});
 
 	static MeasurementType = keyMirror({
@@ -31,6 +32,7 @@ export default class AbstractPlatform {
 		BUTTON: null,
 		TEMPERATURE: null,
 		MONITORING: null,
+		WEATHER: null,
 	});
 
 	constructor() {

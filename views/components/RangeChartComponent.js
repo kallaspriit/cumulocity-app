@@ -81,7 +81,7 @@ export default class RangeChartComponent extends Component {
 			},
 
 			series: [{
-				name: 'USD to EUR',
+				name: 'History',
 				data: data.map((item) => [
 					item[0].getTime() - (item[0].getTimezoneOffset() * 60 * 1000),
 					item[1],
