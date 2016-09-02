@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import store from 'store';
 import keyMirror from 'keymirror';
-import { getDefaultAsyncState } from '../libs/redux-promise-loading-middleware';
+import { getDefaultAsyncState } from 'redux-loading-promise-middleware';
 import { SET_CREDENTIALS, AUTHENTICATE, LOGOUT } from '../config/constants';
 
 const StoreKey = keyMirror({
